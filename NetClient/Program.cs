@@ -18,7 +18,7 @@ Vector3 v = new Vector3() { X = 100, Y = 200, Z = 300 };  //proto类型
 SendMessage(socket, v.ToByteArray());
 
 
-static void SendMessage(Socket socket, byte[] body)  // 角色信息、消息信息、战斗记录
+static void SendMessage(Socket socket, byte[] body)  // 角色信息、消息信息、战斗记录 
 {
     //  网络参数的基本单位是字节，所有模态的数据都要转化为字节进行传输
     int len = body.Length; // 消息的真正的长度
