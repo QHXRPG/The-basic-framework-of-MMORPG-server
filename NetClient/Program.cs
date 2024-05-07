@@ -14,12 +14,6 @@ socket.Connect(iPEndPoint);
 Console.WriteLine("成功连接到服务器");
 
 //  将字符串转为字节数组, 编码为 UTF8,
-
-// 数据序列化 （对象 转 字节）
-/*Vector3 v = new Vector3() { X = 100, Y = 200, Z = 300 };  //proto类型
-byte[] body = Encoding.UTF8.GetBytes(v.ToString());
-SendMessage(socket, body);*/
-
 Vector3 v = new Vector3() { X = 100, Y = 200, Z = 300 };  //proto类型
 SendMessage(socket, v.ToByteArray());
 

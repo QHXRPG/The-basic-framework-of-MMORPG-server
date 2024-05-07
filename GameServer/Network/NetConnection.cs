@@ -37,13 +37,13 @@ namespace GameServer.Network
 
         private void OnDisconnected(Socket soc)
         {
-            disconnectedCallback(this);
+            disconnectedCallback?.Invoke(this);
 
         }
               
         private void OnDataReceived(object? sender, byte[] buffer)
         {
-            datareceivedCallback(this, buffer);
+            datareceivedCallback?.Invoke(this, buffer); // datareceivedCallback为空不执行
         }
 
         public void Close() // 主动关闭连接
