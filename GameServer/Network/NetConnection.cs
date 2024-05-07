@@ -38,6 +38,7 @@ namespace GameServer.Network
         private void OnDisconnected(Socket soc)
         {
             disconnectedCallback(this);
+
         }
               
         private void OnDataReceived(object? sender, byte[] buffer)
