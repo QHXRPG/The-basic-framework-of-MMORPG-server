@@ -25,5 +25,5 @@ static void SendMessage(Socket socket, byte[] body)  // 角色信息、消息信
     byte[] lenBytes = BitConverter.GetBytes(len); // 转字节
 
     socket.Send(lenBytes);  // 发四个字节的长度
-    socket.Send(body);   // 发消息体
+    socket.Send(body);   // 发送消息体
 }
