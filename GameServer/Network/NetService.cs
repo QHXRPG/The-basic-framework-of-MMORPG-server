@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using Proto.Message;
+using Common.Network;
 
 namespace GameServer.Network
 {
@@ -46,6 +47,7 @@ namespace GameServer.Network
             // 反序列化（字节 转 对象）
             Vector3 v = Vector3.Parser.ParseFrom(data);
             Console.WriteLine(v.ToString());
+            MessageRouter.Instance.AddMessage(sender, v);
         }
 
         private static void OnDataReceived(object? sender, byte[] buffer)

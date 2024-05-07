@@ -1,4 +1,5 @@
-﻿using GameServer.Network;
+﻿using Common.Network;
+using GameServer.Network;
 using Network;
 using Proto.Message;
 using System;
@@ -18,7 +19,15 @@ namespace GameServer
             NetService netserver = new NetService();
             netserver.Init(32510);
             netserver.Start();
+
+            MessageRouter.Instance.On<Vector3>(fff);
+
             Console.ReadKey();
+        }
+
+        static void fff<Vector3>(NetConnection sender, Vector3 msg)
+        {
+
         }
     }
 }
