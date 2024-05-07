@@ -20,7 +20,7 @@ namespace GameServer
             netserver.Init(32510);
             netserver.Start();
 
-            MessageRouter.Instance.On<Vector3>(fff);
+            MessageRouter.Instance.Start(4);
 
             Console.ReadKey();
         }

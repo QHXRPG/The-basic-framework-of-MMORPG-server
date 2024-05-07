@@ -45,14 +45,8 @@ namespace GameServer.Network
         private void OnDataReceiveCallback(NetConnection sender, byte[] data)
         {
             // 反序列化（字节 转 对象）
-            Vector3 v = Vector3.Parser.ParseFrom(data);
-            Console.WriteLine(v.ToString());
-            MessageRouter.Instance.AddMessage(sender, v);
-        }
-
-        private static void OnDataReceived(object? sender, byte[] buffer)
-        {
-
+            package package = package.Parser.ParseFrom(data);  // 使用一个全局的package作为解析的数据包
+            MessageRouter.Instance.AddMessage(sender, package);
         }
     }
 }

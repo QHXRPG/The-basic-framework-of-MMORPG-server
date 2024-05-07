@@ -13,9 +13,20 @@ socket.Connect(iPEndPoint);
 
 Console.WriteLine("成功连接到服务器");
 
-//  将字符串转为字节数组, 编码为 UTF8,
-Vector3 v = new Vector3() { X = 100, Y = 200, Z = 300 };  //proto类型
-SendMessage(socket, v.ToByteArray());
+//用户登录消息
+package package = new package();
+package.Request = new Request();
+package.Request.UserLogin = new UserLoginRequest();
+package.Request.UserLogin.Username = "QHXRPG";
+package.Request.UserLogin.Password = "123456";
+
+//存储序列化后的消息内容
+MemoryStream rawOutput = new MemoryStream();
+CodedOutputStream output = new CodedOutputStream(rawOutput);
+package.WriteTo(output);
+output.Flush();
+SendMessage(socket, rawOutput.ToArray());
+
 
 
 static void SendMessage(Socket socket, byte[] body)  // 角色信息、消息信息、战斗记录 
