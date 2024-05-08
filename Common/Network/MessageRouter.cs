@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
+using System.Reflection.Metadata;
+using Google.Protobuf.WellKnownTypes;
 
 // 消息分发
 namespace Common.Network
@@ -12,7 +15,7 @@ namespace Common.Network
     class Msg  // 消息单元
     {
         public NetConnection sender;
-        public package message;
+        public Google.Protobuf.IMessage message;
     }
     public class MessageRouter : Singleton<MessageRouter> // 消息分发器，设计成单例模式
     {
@@ -44,7 +47,7 @@ namespace Common.Network
             // 支持所有类型的消息，但必须是IMessage 
 
             // 取出类型名称
-            string type = typeof(T).Name;
+            string type = typeof(T).FullName;
 
             // 监测这个消息类型(频道)在 delegateMap 中是否存在，没有则创建
             if (!delegateMap.ContainsKey(type))
@@ -60,7 +63,7 @@ namespace Common.Network
         public void Off<T>(MessageHandler<T> handler) where T : Google.Protobuf.IMessage
         {
             // 支持所有类型的消息，但必须是IMessage 
-            string key = typeof(T).Name;
+            string key = typeof(T).FullName;
 
             // 监测这个消息类型(频道)在 delegateMap 中是否存在，没有则创建
             if (!delegateMap.ContainsKey(key))
@@ -71,7 +74,7 @@ namespace Common.Network
             delegateMap[key] = (MessageHandler<T>)delegateMap[key] - handler;
         }
 
-        public void AddMessage(NetConnection sender, package message)
+        public void AddMessage(NetConnection sender, Google.Protobuf.IMessage message)
         {
             // 添加新的消息到队列中
             messsageQueue.Enqueue(new Msg() { sender = sender, message = message });
@@ -80,9 +83,9 @@ namespace Common.Network
             this.threadEvent.Set();
         }
 
-        void Fire<T>(NetConnection sender, T msg) // 触发
+        private void Fire<T>(NetConnection sender, T msg) // 触发
         {
-            string type = typeof(T).Name;
+            string type = typeof(T).FullName;
             if(delegateMap.ContainsKey(type))  // 如果有人订阅了这个消息
             {
                 MessageHandler<T> handler = (MessageHandler<T>)delegateMap[type];
@@ -130,21 +133,17 @@ namespace Common.Network
                         continue;
                     }
                     Msg msg = messsageQueue.Dequeue();  // 出队一个消息，给pack
-                    package package = msg.message;
+                    Google.Protobuf.IMessage package = msg.message;
                     if(package != null)
                     {
-                        if(package.Request != null)
-                        {
-                            doRequest(msg.sender, package.Request);
-                        }
-                        if(package.Response != null)
-                        {
-                            doReponse(msg.sender, package.Response);
-                        }
+                        executeMessage(msg.sender, package);
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) 
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
             finally
             {
                 WorkerCount = Interlocked.Decrement(ref WorkerCount);  // 原子性 线程安全 地 -1
@@ -163,27 +162,35 @@ namespace Common.Network
             Thread.Sleep(100);
         }
 
-        private void doRequest(NetConnection sender, Request request) // 处理请求
+        // 递归处理消息
+        private void executeMessage(NetConnection sender, Google.Protobuf.IMessage message) 
         {
-            if (request.UserRegister != null)
-            {
-                Fire(sender, request.UserRegister); // 传的是什么，就调用Fire去触发
-            }
-            if (request.UserLogin != null)
-            {
-                Fire(sender, request.UserLogin);
-            }
-        }
+            // 使用反射机制获取当前对象中名为"Fire"的非公共实例方法
+            var fireMethod = this.GetType().GetMethod("Fire", BindingFlags.NonPublic | BindingFlags.Instance);
+            // 发现消息，触发订阅，
+            var met = fireMethod.MakeGenericMethod(message.GetType());
+            met.Invoke(this, new object[] { sender, message }); // 调用
 
-        private void doReponse(NetConnection sender, Response respone)  // 处理响应
-        {
-            if(respone.UserRegister != null)
+            //找属性
+            var t = message.GetType();
+            foreach (var p in t.GetProperties())
             {
-                Fire(sender, respone.UserRegister);
-            }
-            if(respone.UserLogin != null)
-            {
-                Fire(sender, respone.UserLogin);
+                // 过滤
+                if (p.Name == "Parser" || p.Name == "Descriptor") continue;
+                // 递归过程中只要发现消息，就可以触发订阅
+                var value = p.GetValue(message);
+                if (value != null)
+                {
+                    // 判断是不是继承自Google.Protobuf.IMessage
+                    if (value.GetType().IsAssignableTo(typeof(Google.Protobuf.IMessage)))
+                    {
+
+
+                        // 继续递归
+                        executeMessage(sender, (Google.Protobuf.IMessage)value);
+
+                    }
+                }
             }
         }
 

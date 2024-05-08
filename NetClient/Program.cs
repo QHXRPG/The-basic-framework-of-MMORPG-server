@@ -15,13 +15,13 @@ socket.Connect(iPEndPoint);
 Console.WriteLine("成功连接到服务器");
 
 //用户登录消息
-package package = new package();
-package.Request = new Request();
-package.Request.UserLogin = new UserLoginRequest();
-package.Request.UserLogin.Username = "QHXRPG";
-package.Request.UserLogin.Password = "123456";
 NetConnection conn = new NetConnection(socket, null, null);
-conn.Send(package);
+conn.Request.UserLogin = new UserLoginRequest();
+conn.Request.UserLogin.Username = "QHXRPG";
+conn.Request.UserLogin.Password = "123456";
+Thread.Sleep(1000); 
+
+conn.Send();
 
 
 static void SendMessage(Socket socket, byte[] body)  // 角色信息、消息信息、战斗记录 
