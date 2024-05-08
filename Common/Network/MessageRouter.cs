@@ -80,11 +80,29 @@ namespace Common.Network
             this.threadEvent.Set();
         }
 
+        void Fire<T>(NetConnection sender, T msg) // 触发
+        {
+            string type = typeof(T).Name;
+            if(delegateMap.ContainsKey(type))  // 如果有人订阅了这个消息
+            {
+                MessageHandler<T> handler = (MessageHandler<T>)delegateMap[type];
+                try
+                {
+                    handler?.Invoke(sender, msg); // 执行对应的分支
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("MessageRouter.Fire error" + e.StackTrace);
+                }
+                
+            }
+        }
+
+
         public void Start(int ThreadCount)
         {
             this.Running = true;
-            this.ThreadCount = Math.Max(1, ThreadCount);  // 线程数大于1
-            this.ThreadCount = Math.Min(ThreadCount, 200); // 线程数小于200
+            this.ThreadCount = Math.Min(Math.Max(1, ThreadCount), 200);  // 线程数大于1,小于200
 
             for(int i=0; i<this.ThreadCount; i++)  // 给每个线程分配任务
             {
@@ -117,18 +135,11 @@ namespace Common.Network
                     {
                         if(package.Request != null)
                         {
-                            if(package.Request.UserRegister != null)
-                            {
-                                Console.WriteLine("用户注册：" + package.Request.UserRegister.Username);
-                            }
-                            if(package.Request.UserLogin != null)
-                            {
-                                Console.WriteLine("用户注册：" + package.Request.UserLogin.Username);
-                            }
+                            doRequest(msg.sender, package.Request);
                         }
                         if(package.Response != null)
                         {
-
+                            doReponse(msg.sender, package.Response);
                         }
                     }
                 }
@@ -151,5 +162,30 @@ namespace Common.Network
             }
             Thread.Sleep(100);
         }
+
+        private void doRequest(NetConnection sender, Request request) // 处理请求
+        {
+            if (request.UserRegister != null)
+            {
+                Fire(sender, request.UserRegister); // 传的是什么，就调用Fire去触发
+            }
+            if (request.UserLogin != null)
+            {
+                Fire(sender, request.UserLogin);
+            }
+        }
+
+        private void doReponse(NetConnection sender, Response respone)  // 处理响应
+        {
+            if(respone.UserRegister != null)
+            {
+                Fire(sender, respone.UserRegister);
+            }
+            if(respone.UserLogin != null)
+            {
+                Fire(sender, respone.UserLogin);
+            }
+        }
+
     }
 }
