@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common
+namespace Summer
 {
     //where T: new() 参数类型约束，T必须要有一个无参构造函数
     /// <summary>

@@ -1,4 +1,4 @@
-﻿using Common;
+﻿using Summer;
 using Proto.Message;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Reflection.Metadata;
 using Google.Protobuf.WellKnownTypes;
 
 // 消息分发
-namespace Common.Network
+namespace Summer.Network
 {
     class Msg  // 消息单元
     {

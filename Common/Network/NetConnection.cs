@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using static Network.LengthFieldDecoder;
 using Google.Protobuf;
 
-namespace Common.Network
+namespace Summer.Network
 {
     // 网络连接类，每一个NetConnection代表一个客户端
     // 功能：发送、接收网络消息，关闭连接，断开通知
