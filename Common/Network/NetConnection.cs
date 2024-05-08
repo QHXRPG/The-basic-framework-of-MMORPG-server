@@ -7,6 +7,7 @@ using System.Text;
 using Proto.Message;
 using System.Threading.Tasks;
 using static Network.LengthFieldDecoder;
+using Google.Protobuf;
 
 namespace Common.Network
 {
@@ -56,6 +57,38 @@ namespace Common.Network
             socket.Close();
             socket = null;
             disconnectedCallback(this);
+        }
+
+        public void Send(package package)
+        {
+            byte[] data = null;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                package.WriteTo(ms);  // 把传来的对象写入内存流当中，转为字节数组
+
+                // 编码
+                data = new byte[4 + ms.Length];
+                Buffer.BlockCopy(BitConverter.GetBytes(ms.Length), 0, data, 0, 4); // 把消息的长度填充到消息头当中
+                Buffer.BlockCopy(ms.GetBuffer(), 0, data, 4, (int)ms.Length); //把消息内容加到消息头中
+            }
+            Send(data, 0, data.Length);  //  从0开始，发data的长度的数据
+        }
+
+        public void Send(byte[] data, int offset, int count)  // 异步发送消息
+        {
+            lock(this)  //加锁
+            {
+                if (socket.Connected)  // 如果socket已连接
+                {
+                    // 把消息放到发送缓冲区
+                    socket.BeginSend(data, offset, count, SocketFlags.None, new AsyncCallback(SendCallback), socket);
+                }
+            }
+        }
+
+        private void SendCallback(IAsyncResult ar)
+        {
+            int len = socket.EndSend(ar);  //发送字节数
         }
     }
 }

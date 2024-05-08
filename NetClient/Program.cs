@@ -5,6 +5,7 @@ using System.Text;
 using System;
 using Proto.Message;
 using Google.Protobuf;
+using Common.Network;
 
 Console.WriteLine("Hello, World!");
 IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 32510); // 连接服务器
@@ -19,14 +20,8 @@ package.Request = new Request();
 package.Request.UserLogin = new UserLoginRequest();
 package.Request.UserLogin.Username = "QHXRPG";
 package.Request.UserLogin.Password = "123456";
-
-//存储序列化后的消息内容
-MemoryStream rawOutput = new MemoryStream();
-CodedOutputStream output = new CodedOutputStream(rawOutput);
-package.WriteTo(output);
-output.Flush();
-SendMessage(socket, rawOutput.ToArray());
-
+NetConnection conn = new NetConnection(socket, null, null);
+conn.Send(package);
 
 
 static void SendMessage(Socket socket, byte[] body)  // 角色信息、消息信息、战斗记录 
