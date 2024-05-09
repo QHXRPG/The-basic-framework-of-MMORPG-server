@@ -6,7 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
-using System.Reflection.Metadata;
+using System.Reflection;
+using System.Threading;
 using Google.Protobuf.WellKnownTypes;
 
 // 消息分发
@@ -182,13 +183,10 @@ namespace Summer.Network
                 if (value != null)
                 {
                     // 判断是不是继承自Google.Protobuf.IMessage
-                    if (value.GetType().IsAssignableTo(typeof(Google.Protobuf.IMessage)))
+                    if (typeof(Google.Protobuf.IMessage).IsAssignableFrom(value.GetType()))
                     {
-
-
                         // 继续递归
                         executeMessage(sender, (Google.Protobuf.IMessage)value);
-
                     }
                 }
             }

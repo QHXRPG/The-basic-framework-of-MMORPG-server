@@ -8,6 +8,7 @@ using Proto.Message;
 using System.Threading.Tasks;
 using static Network.LengthFieldDecoder;
 using Google.Protobuf;
+using System.IO;
 
 namespace Summer.Network
 {
