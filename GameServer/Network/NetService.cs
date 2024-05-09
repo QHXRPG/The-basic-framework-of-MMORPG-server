@@ -34,16 +34,19 @@ namespace GameServer.Network
 
         private void OnClientConnected(object? sender, Socket socket)
         {
-            new NetConnection(socket, new NetConnection.DataReceivedCallback(OnDataReceiveCallback),
-                                      new NetConnection.DisConnectedCallback(OnDisconnectedCallback));
+            var conn = new Connection(socket);
+            conn.OnDataReceived += OnDataReceiveCallback;
+            conn.OnDisconnected+= OnDisconnectedCallback;
+
+
         }
 
-        private void OnDisconnectedCallback(NetConnection sender)
+        private void OnDisconnectedCallback(Connection sender)
         {
             Console.WriteLine("连接断开");
         }
 
-        private void OnDataReceiveCallback(NetConnection sender, byte[] data)
+        private void OnDataReceiveCallback(Connection sender, byte[] data)
         {
             // 反序列化（字节 转 对象）
             package package = package.Parser.ParseFrom(data);  // 使用一个全局的package作为解析的数据包

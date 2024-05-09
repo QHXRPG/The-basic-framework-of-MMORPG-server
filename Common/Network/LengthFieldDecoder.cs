@@ -30,14 +30,14 @@ namespace Network
         /// <summary>
         ///	一次性接收数据的最大字节，默认1Mb
         /// </summary>
-        private int mSize = 1024 * 1024;
+        private int mSize = 64 * 1024;
 
         //成功收到消息的委托事件
-        public delegate void OnReceived(object? sender, byte[] data);
+        public delegate void OnReceived(byte[] data);
         public event OnReceived DataReceived;
 
         //连接失败的委托事件
-        public delegate void OnDisconnectedEventHandler(Socket soc);
+        public delegate void OnDisconnectedEventHandler();
         public event OnDisconnectedEventHandler Disconnected;
 
 
@@ -144,7 +144,7 @@ namespace Network
                     mOffect += total;
 
                     //完成一个数据包
-                    DataReceived?.Invoke(mSocket, data);
+                    DataReceived?.Invoke(data);
                     //Debug.Log("完成一个数据包");
                 }
 
@@ -162,7 +162,7 @@ namespace Network
 
         private void _disconnected()
         {
-            Disconnected?.Invoke(mSocket);
+            Disconnected?.Invoke();  // 将mSocket作为参数传递给事件的订阅者
         }
     }
 }

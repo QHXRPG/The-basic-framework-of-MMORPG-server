@@ -12,40 +12,32 @@ using System.IO;
 
 namespace Summer.Network
 {
-    // 网络连接类，每一个NetConnection代表一个客户端
+    // 网络连接类，每一个Connection代表一个客户端
     // 功能：发送、接收网络消息，关闭连接，断开通知
-    public class NetConnection
+    public class Connection
     {
         public Socket socket;
-        public delegate void DataReceivedCallback(NetConnection sender, byte[] data);
-        public delegate void DisConnectedCallback(NetConnection sender);
+        public delegate void DataReceivedCallback(Connection sender, byte[] data);
+        public delegate void DisConnectedCallback(Connection sender);
 
-        private DataReceivedCallback datareceivedCallback;
-        private DisConnectedCallback disconnectedCallback;
+        public DataReceivedCallback OnDataReceived; // 接收到数据
+        public DisConnectedCallback OnDisconnected;  // 连接断开
 
-        public NetConnection(Socket socket, DataReceivedCallback cb1, DisConnectedCallback cb2)
+        public Connection(Socket socket)
         {
             this.socket = socket;
-            this.datareceivedCallback = cb1;
-            this.disconnectedCallback = cb2;
 
             // 创建一个解码器  
             // 参数： socket， 缓冲区大小， 长度字段的位置下标、长度字段本身长度、长度字节和内容中间隔了几个字节、舍弃前面几个字节
             var lfd = new LengthFieldDecoder(socket, 64 * 1024, 0, 4, 0, 4);
-            lfd.DataReceived += OnDataReceived;
-            lfd.Disconnected += OnDisconnected;
+            lfd.DataReceived += _received;  //接收到完整的消息时触发DataReceived事件
+            lfd.Disconnected += () => OnDisconnected?.Invoke(this);  //lfd的Disconnected事件触发时被调用的
             lfd.Start();  // 启动解码器
         }
 
-        private void OnDisconnected(Socket soc)
+        private void _received(byte[] data)
         {
-            disconnectedCallback?.Invoke(this);
-
-        }
-              
-        private void OnDataReceived(object? sender, byte[] buffer)
-        {
-            datareceivedCallback?.Invoke(this, buffer); // datareceivedCallback为空不执行
+            OnDataReceived?.Invoke(this, data);
         }
 
         public void Close() // 主动关闭连接
@@ -57,56 +49,17 @@ namespace Summer.Network
             catch { }
             socket.Close();
             socket = null;
-            disconnectedCallback(this);
+            OnDisconnected?.Invoke(this);
         }
 
         #region 发送网络数据包的相关代码
-        private package _package = null;
-        public Request Request
-        {
-            get
-            {
-                if(_package == null)
-                {
-                    _package = new package();
-                }
-                if(_package.Request == null)
-                {
-                    _package.Request = new Request();
-                }
-                return _package.Request;
-            }
-        }
 
-        public Response Response
-        {
-            get
-            {
-                if (_package == null)
-                {
-                    _package = new package();
-                }
-                if (_package.Response == null)
-                {
-                    _package.Response = new Response();
-                }
-                return _package.Response;
-            }
-        }
-
-        public void Send()
-        {
-            if(_package != null)
-                Send(_package);
-            _package = null;
-        }
-
-        public void Send(package package)
+        public void Send(Google.Protobuf.IMessage message)
         {
             byte[] data = null;
             using (MemoryStream ms = new MemoryStream())
             {
-                package.WriteTo(ms);  // 把传来的对象写入内存流当中，转为字节数组
+                message.WriteTo(ms);  // 把传来的对象写入内存流当中，转为字节数组
 
                 // 编码
                 data = new byte[4 + ms.Length];

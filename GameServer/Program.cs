@@ -28,7 +28,7 @@ namespace GameServer
             Console.ReadKey();
         }
 
-        private static void OnUserLoginRequest(NetConnection sender, UserLoginRequest msg)
+        private static void OnUserLoginRequest(Connection sender, UserLoginRequest msg)
         {
             //当消息分发器发现了UserLoginRequest类型的数据，就会调用OnUserLoginRequest
             Console.WriteLine("发现用户登录消息:{0}, {1}", msg.Username, msg.Password); 

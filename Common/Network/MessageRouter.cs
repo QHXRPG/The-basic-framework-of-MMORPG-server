@@ -15,7 +15,7 @@ namespace Summer.Network
 {
     class Msg  // 消息单元
     {
-        public NetConnection sender;
+        public Connection sender;
         public Google.Protobuf.IMessage message;
     }
     public class MessageRouter : Singleton<MessageRouter> // 消息分发器，设计成单例模式
@@ -37,7 +37,7 @@ namespace Summer.Network
         private Queue<Msg> messsageQueue = new Queue<Msg> ();
 
         // 消息处理器 : 给订阅者们提供的结构，订阅者们通过消息处理器获得对应业务的消息
-        public delegate void MessageHandler<T>(NetConnection sender, T msg);
+        public delegate void MessageHandler<T>(Connection sender, T msg);
 
         // 频道字典：每一个名字（技能消息，坐标消息，地图消息）对应一个委托
         private Dictionary<string, Delegate> delegateMap = new Dictionary<string, Delegate>();
@@ -75,7 +75,7 @@ namespace Summer.Network
             delegateMap[key] = (MessageHandler<T>)delegateMap[key] - handler;
         }
 
-        public void AddMessage(NetConnection sender, Google.Protobuf.IMessage message)
+        public void AddMessage(Connection sender, Google.Protobuf.IMessage message)
         {
             // 添加新的消息到队列中
             messsageQueue.Enqueue(new Msg() { sender = sender, message = message });
@@ -84,7 +84,7 @@ namespace Summer.Network
             this.threadEvent.Set();
         }
 
-        private void Fire<T>(NetConnection sender, T msg) // 触发
+        private void Fire<T>(Connection sender, T msg) // 触发
         {
             string type = typeof(T).FullName;
             if(delegateMap.ContainsKey(type))  // 如果有人订阅了这个消息
@@ -164,7 +164,7 @@ namespace Summer.Network
         }
 
         // 递归处理消息
-        private void executeMessage(NetConnection sender, Google.Protobuf.IMessage message) 
+        private void executeMessage(Connection sender, Google.Protobuf.IMessage message) 
         {
             // 使用反射机制获取当前对象中名为"Fire"的非公共实例方法
             var fireMethod = this.GetType().GetMethod("Fire", BindingFlags.NonPublic | BindingFlags.Instance);
