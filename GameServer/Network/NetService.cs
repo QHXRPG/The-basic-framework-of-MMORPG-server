@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Proto.Message;
 using Summer.Network;
+using Summer;
 
 namespace GameServer.Network
 {
