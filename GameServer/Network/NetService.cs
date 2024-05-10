@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Proto.Message;
 using Summer.Network;
 using Summer;
+using Serilog;
 
 namespace GameServer.Network
 {
@@ -30,12 +31,12 @@ namespace GameServer.Network
 
         private void OnClientConnected(Connection conn)
         {
-            Console.WriteLine("客户端接入");
+            Log.Information("客户端接入");
         }
 
         private void OnDisconnectedCallback(Connection conn)
         {
-            Console.WriteLine("连接断开" + conn);
+            Log.Information("连接断开" + conn);
         }
 
         private void OnDataReceiveCallback(Connection conn, byte[] data)

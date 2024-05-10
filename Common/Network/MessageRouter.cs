@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Reflection;
 using System.Threading;
 using Google.Protobuf.WellKnownTypes;
+using Serilog;
 
 // 消息分发
 namespace Summer.Network
@@ -57,7 +58,7 @@ namespace Summer.Network
             }
 
             delegateMap[type] = (MessageHandler<T>)delegateMap[type] + handler;
-            Console.WriteLine(type + " : " + delegateMap[type].GetInvocationList().Length);
+            Log.Information(type + " : " + delegateMap[type].GetInvocationList().Length);
         }
 
         // 退订
@@ -98,7 +99,7 @@ namespace Summer.Network
                 }
                 catch(Exception e)
                 {
-                    Console.WriteLine("MessageRouter.Fire error" + e.StackTrace);
+                    Log.Error("MessageRouter.Fire error" + e.StackTrace);
                 }
                 
             }
@@ -123,7 +124,7 @@ namespace Summer.Network
 
         private void MessageWork(object? state)
         {
-            Console.WriteLine("MessageWorker thread start");
+            Log.Information("MessageWorker thread start");
             try
             {
                 WorkerCount = Interlocked.Increment(ref WorkerCount);  // 原子性 线程安全 地 +1
@@ -152,13 +153,13 @@ namespace Summer.Network
             }
             catch (Exception ex) 
             {
-                Console.WriteLine(ex.StackTrace);
+                Log.Error(ex.StackTrace);
             }
             finally
             {
                 WorkerCount = Interlocked.Decrement(ref WorkerCount);  // 原子性 线程安全 地 -1
             }
-            Console.WriteLine("MessageWorker thread end");
+            Log.Information("MessageWorker thread end");
         }
 
         public void Stop()

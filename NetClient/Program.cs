@@ -7,22 +7,23 @@ using Proto.Message;
 using Google.Protobuf;
 using Summer.Network;
 using Summer;
-using Common;
+using Serilog;
 
-Log.Print += (text, args) =>
-{
-    Console.WriteLine(text, args);
-};
+// 设置 Serilog 配置
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .CreateLogger();
 
-Console.WriteLine("Hello, World!");
+Log.Information("Hello, World!");
 IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 32510); // 连接服务器
 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 socket.Connect(iPEndPoint);
 
-Log.Info("成功连接到服务器");
+Log.Information("成功连接到服务器");
 
 //用户登录消息 压力测试
-/*for(int i=0; i<100000; i++)
+/*for (int i = 0; i < 100000; i++)
 {
     MyConnection conn = new MyConnection(socket);
     conn.Request.UserLogin = new UserLoginRequest();
@@ -30,6 +31,7 @@ Log.Info("成功连接到服务器");
     conn.Request.UserLogin.Password = "pwd-" + i;
     conn.Send();
 }*/
+
 MyConnection conn = new MyConnection(socket);
 void SendRequest(Google.Protobuf.IMessage message)
 {
@@ -38,10 +40,10 @@ void SendRequest(Google.Protobuf.IMessage message)
     // 拆开Request，遍历属性
     foreach (var p in package.Request.GetType().GetProperties())
     {
-        if(p.PropertyType == message.GetType())  // 当p是Request时
+        if (p.PropertyType == message.GetType())  // 当p是Request时
         {
             p.SetValue(package.Request, message);  // 把message赋值给package的Request
-            
+
         }
     }
     conn.Send(package);  // 发送这个package

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -64,7 +65,7 @@ public class TcpServer
                                             SocketType.Stream, ProtocolType.Tcp);
                 serverSocket.Bind(endPoint);  //绑定端口号
                 serverSocket.Listen(backlog);  //监听, 队列长度为backlog
-                Console.WriteLine("开始监听端口：" + endPoint.Port); //等待用户连接
+                Log.Information("开始监听端口：" + endPoint.Port); //等待用户连接
 
                 SocketAsyncEventArgs args = new SocketAsyncEventArgs();  //接受客户端
                 args.Completed += OnAccept;      // 当有人连入的时候,Completed事件被触发, 直接执行OnAccept， 把args传给OnAccept
@@ -72,7 +73,7 @@ public class TcpServer
             }
             else
             {
-                Console.WriteLine("This TcpServe is already running");
+                Log.Information("This TcpServe is already running");
             }
         }
     }
