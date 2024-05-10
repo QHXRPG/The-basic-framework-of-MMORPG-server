@@ -32,27 +32,17 @@ Log.Information("成功连接到服务器");
     conn.Send();
 }*/
 
-MyConnection conn = new MyConnection(socket);
-void SendRequest(Google.Protobuf.IMessage message)
-{
-    //网络传输的数据包
-    var package = new package() { Request = new Request() };
-    // 拆开Request，遍历属性
-    foreach (var p in package.Request.GetType().GetProperties())
-    {
-        if (p.PropertyType == message.GetType())  // 当p是Request时
-        {
-            p.SetValue(package.Request, message);  // 把message赋值给package的Request
-
-        }
-    }
-    conn.Send(package);  // 发送这个package
-}
+Connection conn = new Connection(socket);
 
 var msg = new UserLoginRequest();
 msg.Username = "qhx";
 msg.Password = "123";
-SendRequest(msg);
+conn.Send(msg);
+
+var pack = ProtoHelper.Pack(msg);
+var res = ProtoHelper.Unpack(pack);
+
+Log.Information("{0} : {1}",res.GetType(), res);
 Console.ReadKey();
 
 

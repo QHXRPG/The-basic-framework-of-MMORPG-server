@@ -28,25 +28,22 @@ namespace Proto.Message {
             "eBgBIAEoBRIJCgF5GAIgASgFEgkKAXoYAyABKAUidwoGRW50aXR5EgoKAmlk",
             "GAEgASgFEg0KBXNwZWVkGAIgASgFEigKCHBvc2l0aW9uGAMgASgLMhYuUHJv",
             "dG8uTWVzc2FnZS5WZWN0b3IzEigKCHJvdGF0aW9uGAQgASgLMhYuUHJvdG8u",
-            "TWVzc2FnZS5WZWN0b3IzIl0KB3BhY2thZ2USJwoHcmVxdWVzdBgBIAEoCzIW",
-            "LlByb3RvLk1lc3NhZ2UuUmVxdWVzdBIpCghyZXNwb25zZRgCIAEoCzIXLlBy",
-            "b3RvLk1lc3NhZ2UuUmVzcG9uc2UidwoHUmVxdWVzdBI4Cgx1c2VyUmVnaXN0",
-            "ZXIYASABKAsyIi5Qcm90by5NZXNzYWdlLlVzZXJSZWdpc3RlclJlcXVlc3QS",
-            "MgoJdXNlckxvZ2luGAIgASgLMh8uUHJvdG8uTWVzc2FnZS5Vc2VyTG9naW5S",
-            "ZXF1ZXN0IngKCFJlc3BvbnNlEjgKDHVzZXJSZWdpc3RlchgBIAEoCzIiLlBy",
-            "b3RvLk1lc3NhZ2UuVXNlclJlZ2lzdGVyUmVwb25zZRIyCgl1c2VyTG9naW4Y",
-            "AiABKAsyHy5Qcm90by5NZXNzYWdlLlVzZXJMb2dpblJlcG9uc2UiOQoTVXNl",
-            "clJlZ2lzdGVyUmVxdWVzdBIQCgh1c2VybmFtZRgBIAEoCRIQCghwYXNzd29y",
-            "ZBgCIAEoCSI0ChNVc2VyUmVnaXN0ZXJSZXBvbnNlEgwKBGNvZGUYASABKAUS",
-            "DwoHbWVzc2FnZRgCIAEoCSI2ChBVc2VyTG9naW5SZXF1ZXN0EhAKCHVzZXJu",
-            "YW1lGAEgASgJEhAKCHBhc3N3b3JkGAIgASgJIjEKEFVzZXJMb2dpblJlcG9u",
-            "c2USDAoEY29kZRgBIAEoBRIPCgdtZXNzYWdlGAIgASgJYgZwcm90bzM="));
+            "TWVzc2FnZS5WZWN0b3IzIncKB1JlcXVlc3QSOAoMdXNlclJlZ2lzdGVyGAEg",
+            "ASgLMiIuUHJvdG8uTWVzc2FnZS5Vc2VyUmVnaXN0ZXJSZXF1ZXN0EjIKCXVz",
+            "ZXJMb2dpbhgCIAEoCzIfLlByb3RvLk1lc3NhZ2UuVXNlckxvZ2luUmVxdWVz",
+            "dCJ4CghSZXNwb25zZRI4Cgx1c2VyUmVnaXN0ZXIYASABKAsyIi5Qcm90by5N",
+            "ZXNzYWdlLlVzZXJSZWdpc3RlclJlcG9uc2USMgoJdXNlckxvZ2luGAIgASgL",
+            "Mh8uUHJvdG8uTWVzc2FnZS5Vc2VyTG9naW5SZXBvbnNlIjkKE1VzZXJSZWdp",
+            "c3RlclJlcXVlc3QSEAoIdXNlcm5hbWUYASABKAkSEAoIcGFzc3dvcmQYAiAB",
+            "KAkiNAoTVXNlclJlZ2lzdGVyUmVwb25zZRIMCgRjb2RlGAEgASgFEg8KB21l",
+            "c3NhZ2UYAiABKAkiNgoQVXNlckxvZ2luUmVxdWVzdBIQCgh1c2VybmFtZRgB",
+            "IAEoCRIQCghwYXNzd29yZBgCIAEoCSIxChBVc2VyTG9naW5SZXBvbnNlEgwK",
+            "BGNvZGUYASABKAUSDwoHbWVzc2FnZRgCIAEoCWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Proto.Message.Vector3), global::Proto.Message.Vector3.Parser, new[]{ "X", "Y", "Z" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Proto.Message.Entity), global::Proto.Message.Entity.Parser, new[]{ "Id", "Speed", "Position", "Rotation" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Proto.Message.package), global::Proto.Message.package.Parser, new[]{ "Request", "Response" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Proto.Message.Request), global::Proto.Message.Request.Parser, new[]{ "UserRegister", "UserLogin" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Proto.Message.Response), global::Proto.Message.Response.Parser, new[]{ "UserRegister", "UserLogin" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Proto.Message.UserRegisterRequest), global::Proto.Message.UserRegisterRequest.Parser, new[]{ "Username", "Password" }, null, null, null, null),
@@ -641,253 +638,6 @@ namespace Proto.Message {
   }
 
   /// <summary>
-  ///全局类型
-  /// </summary>
-  public sealed partial class package : pb::IMessage<package>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<package> _parser = new pb::MessageParser<package>(() => new package());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<package> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Proto.Message.MessageReflection.Descriptor.MessageTypes[2]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public package() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public package(package other) : this() {
-      request_ = other.request_ != null ? other.request_.Clone() : null;
-      response_ = other.response_ != null ? other.response_.Clone() : null;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public package Clone() {
-      return new package(this);
-    }
-
-    /// <summary>Field number for the "request" field.</summary>
-    public const int RequestFieldNumber = 1;
-    private global::Proto.Message.Request request_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Proto.Message.Request Request {
-      get { return request_; }
-      set {
-        request_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "response" field.</summary>
-    public const int ResponseFieldNumber = 2;
-    private global::Proto.Message.Response response_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Proto.Message.Response Response {
-      get { return response_; }
-      set {
-        response_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as package);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(package other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (!object.Equals(Request, other.Request)) return false;
-      if (!object.Equals(Response, other.Response)) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (request_ != null) hash ^= Request.GetHashCode();
-      if (response_ != null) hash ^= Response.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (request_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Request);
-      }
-      if (response_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(Response);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (request_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Request);
-      }
-      if (response_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(Response);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (request_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Request);
-      }
-      if (response_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Response);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(package other) {
-      if (other == null) {
-        return;
-      }
-      if (other.request_ != null) {
-        if (request_ == null) {
-          Request = new global::Proto.Message.Request();
-        }
-        Request.MergeFrom(other.Request);
-      }
-      if (other.response_ != null) {
-        if (response_ == null) {
-          Response = new global::Proto.Message.Response();
-        }
-        Response.MergeFrom(other.Response);
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            if (request_ == null) {
-              Request = new global::Proto.Message.Request();
-            }
-            input.ReadMessage(Request);
-            break;
-          }
-          case 18: {
-            if (response_ == null) {
-              Response = new global::Proto.Message.Response();
-            }
-            input.ReadMessage(Response);
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            if (request_ == null) {
-              Request = new global::Proto.Message.Request();
-            }
-            input.ReadMessage(Request);
-            break;
-          }
-          case 18: {
-            if (response_ == null) {
-              Response = new global::Proto.Message.Response();
-            }
-            input.ReadMessage(Response);
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  /// <summary>
   /// 玩家 发给 服务器
   /// </summary>
   public sealed partial class Request : pb::IMessage<Request>
@@ -904,7 +654,7 @@ namespace Proto.Message {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Proto.Message.MessageReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Proto.Message.MessageReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1151,7 +901,7 @@ namespace Proto.Message {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Proto.Message.MessageReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Proto.Message.MessageReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1398,7 +1148,7 @@ namespace Proto.Message {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Proto.Message.MessageReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Proto.Message.MessageReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1627,7 +1377,7 @@ namespace Proto.Message {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Proto.Message.MessageReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Proto.Message.MessageReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1853,7 +1603,7 @@ namespace Proto.Message {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Proto.Message.MessageReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Proto.Message.MessageReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2079,7 +1829,7 @@ namespace Proto.Message {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Proto.Message.MessageReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Proto.Message.MessageReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

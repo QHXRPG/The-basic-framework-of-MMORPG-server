@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package proto;
+
+message Package
+{
+    string fullname = 1;   // 服务类型的名称
+    bytes data = 2;        // 字节数据
+}
