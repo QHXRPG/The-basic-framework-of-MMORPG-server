@@ -77,9 +77,11 @@ namespace Summer.Network
 
         public void AddMessage(Connection sender, Google.Protobuf.IMessage message)
         {
-            // 添加新的消息到队列中
-            messsageQueue.Enqueue(new Msg() { sender = sender, message = message });
-
+            lock(messsageQueue)
+            {
+                // 添加新的消息到队列中
+                messsageQueue.Enqueue(new Msg() { sender = sender, message = message });
+            }
             // 唤醒一个线程
             this.threadEvent.Set();
         }
@@ -133,7 +135,13 @@ namespace Summer.Network
                         this.threadEvent.WaitOne(); // 把所有线程阻塞,当有消息入队时会唤醒一个线程
                         continue;
                     }
-                    Msg msg = messsageQueue.Dequeue();  // 出队一个消息，给pack
+                    Msg msg = null;
+                    lock(messsageQueue)
+                    {
+                        // 如果多个线程同时等待最后一个消息，这条语句可以防止空指针异常
+                        if (messsageQueue.Count == 0) continue; 
+                        msg = messsageQueue.Dequeue();  // 出队一个消息，给pack
+                    }
                     Google.Protobuf.IMessage package = msg.message;
                     if(package != null)
                     {

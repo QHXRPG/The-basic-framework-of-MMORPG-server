@@ -25,7 +25,10 @@ namespace GameServer
             // 消息订阅：用户登录消息
             MessageRouter.Instance.On<UserLoginRequest>(OnUserLoginRequest);
 
-            Console.ReadKey();
+            while(true)
+            {
+                Thread.Sleep(100);
+            }
         }
 
         private static void OnUserLoginRequest(Connection sender, UserLoginRequest msg)
