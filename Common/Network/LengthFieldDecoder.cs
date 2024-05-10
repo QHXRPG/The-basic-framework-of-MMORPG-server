@@ -120,7 +120,7 @@ namespace Network
                     }
 
                     //获取包长度
-                    int bodyLen = BitConverter.ToInt32(mBuffer, mOffect + lengthFieldOffset);
+                    int bodyLen = GetInt32BE(mBuffer, mOffect + lengthFieldOffset);
                     if (remain < headLen + adj + bodyLen)
                     {
                         //接收的数据不够一个完整的包，继续接收
@@ -164,5 +164,17 @@ namespace Network
         {
             Disconnected?.Invoke();  // 将mSocket作为参数传递给事件的订阅者
         }
+
+        //获取大端模式int值
+        private int GetInt32BE(byte[] data, int index)
+        {
+            return (data[index] << 0x18) | (data[index + 1] << 0x10) | (data[index + 2] << 8) | (data[index + 3]);
+        }
+        //获取小端模式int值
+        private int GetInt32LE(byte[] data, int index)
+        {
+            return (data[index] | (data[index + 1] << 8) | (data[index + 2] << 0x10) | (data[index + 3] << 0x18));
+        }
+
     }
 }

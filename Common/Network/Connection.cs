@@ -68,11 +68,17 @@ namespace Summer.Network
             using (MemoryStream ms = new MemoryStream())
             {
                 message.WriteTo(ms);  // 把传来的对象写入内存流当中，转为字节数组
+                int len = (int)ms.Length; // 数据本身长度
 
                 // 编码
-                data = new byte[4 + ms.Length];
-                Buffer.BlockCopy(BitConverter.GetBytes(ms.Length), 0, data, 0, 4); // 把消息的长度填充到消息头当中
-                Buffer.BlockCopy(ms.GetBuffer(), 0, data, 4, (int)ms.Length); //把消息内容加到消息头中
+                data = new byte[4 + len];
+                byte[] lenbytes = BitConverter.GetBytes(len);
+                if (BitConverter.IsLittleEndian) //如果当前是小端平台，翻转成大端
+                    Array.Reverse(lenbytes);
+
+                // 数据拼接
+                Buffer.BlockCopy(lenbytes, 0, data, 0, 4); // 把消息的长度填充到消息头当中
+                Buffer.BlockCopy(ms.GetBuffer(), 0, data, 4, len); //把消息内容加到消息头中
             }
             Send(data, 0, data.Length);  //  从0开始，发data的长度的数据
         }
