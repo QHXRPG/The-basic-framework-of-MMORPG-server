@@ -28,7 +28,7 @@ namespace Summer.Network
         int WorkerCount = 0;
 
         // 当前消息分发器的工作状态
-        bool Running = false;
+        public bool Running = false;
 
         // 协调多个线程的通信, 通过set，每次可唤醒一个线程
         AutoResetEvent threadEvent = new AutoResetEvent(true);
