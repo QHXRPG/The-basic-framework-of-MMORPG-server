@@ -58,7 +58,6 @@ namespace Summer
                     var desc = t.GetProperty("Descriptor").GetValue(t) as MessageDescriptor;
                     _registry.Add(desc.FullName, t);
                     list.Add(desc.FullName);
-
                 }
             });
 
@@ -80,7 +79,6 @@ namespace Summer
                 mDict1[i] = t;
                 mDict2[t] = i;
             }
-
         }
 
         public static int SeqCode(Type type)
@@ -101,9 +99,9 @@ namespace Summer
         /// <returns></returns>
         public static IMessage ParseFrom(int typeCode, byte[] data, int offset, int len)
         {
-            Type t = ProtoHelper.SeqType(typeCode);
-            var desc = t.GetProperty("Descriptor").GetValue(t) as MessageDescriptor;
-            var msg = desc.Parser.ParseFrom(data, offset, len);
+            Type t = ProtoHelper.SeqType(typeCode);  // 取出消息编号所对应的消息类型
+            var desc = t.GetProperty("Descriptor").GetValue(t) as MessageDescriptor; //通过反射获取该类型的消息描述符
+            var msg = desc.Parser.ParseFrom(data, offset, len);  // 从 offset 开始取出消息体来解析消息类型
             Log.Information("解析消息：code={0} - {1}", typeCode, msg);
             return msg;
         }

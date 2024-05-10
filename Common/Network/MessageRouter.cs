@@ -27,8 +27,17 @@ namespace Summer.Network
         // 正在工作的线程数
         int WorkerCount = 0;
 
+        bool _running = false;
+
         // 当前消息分发器的工作状态
-        public bool Running = false;
+        public bool Running
+        {
+            get
+            {
+                return _running;
+            }
+        }
+
 
         // 协调多个线程的通信, 通过set，每次可唤醒一个线程
         AutoResetEvent threadEvent = new AutoResetEvent(true);
@@ -44,7 +53,7 @@ namespace Summer.Network
         private Dictionary<string, Delegate> delegateMap = new Dictionary<string, Delegate>();
 
         // 订阅消息
-        public void On<T>(MessageHandler<T> handler)  where T : Google.Protobuf.IMessage 
+        public void Subscribe<T>(MessageHandler<T> handler)  where T : Google.Protobuf.IMessage 
         {
             // 支持所有类型的消息，但必须是IMessage 
 
@@ -104,12 +113,10 @@ namespace Summer.Network
                 
             }
         }
-
-
         public void Start(int ThreadCount)
         {
-            if (Running) return;
-            this.Running = true;
+            if (_running) return;
+            _running = true;
             this.ThreadCount = Math.Min(Math.Max(1, ThreadCount), 200);  // 线程数大于1,小于200
 
             for(int i=0; i<this.ThreadCount; i++)  // 给每个线程分配任务
@@ -130,7 +137,7 @@ namespace Summer.Network
                 WorkerCount = Interlocked.Increment(ref WorkerCount);  // 原子性 线程安全 地 +1
 
                 // 工作
-                while (this.Running)
+                while (_running)
                 {
                     if(messsageQueue.Count == 0) // 如果消息队列没有消息
                     {
@@ -164,7 +171,7 @@ namespace Summer.Network
 
         public void Stop()
         {
-            this.Running = false;
+            _running = false;
             messsageQueue.Clear();  // 清空消息队列
             while(this.WorkerCount > 0)  // 还有线程没退出
             {

@@ -35,7 +35,7 @@ Log.Information("成功连接到服务器");
 Connection conn = new Connection(socket);
 
 var msg = new UserLoginRequest();
-msg.Username = "qhx";
+msg.Username = "qhsdfsdfsdfx";
 msg.Password = "123";
 conn.Send(msg);
 

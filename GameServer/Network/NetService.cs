@@ -20,7 +20,6 @@ namespace GameServer.Network
             tcpServer = new TcpServer("0.0.0.0", 32510);
             tcpServer.Connected += OnClientConnected;
             tcpServer.Disconnected += OnDisconnectedCallback;
-            tcpServer.DataReceived += OnDataReceiveCallback;
         }
 
         public void Start()
@@ -39,9 +38,5 @@ namespace GameServer.Network
             Log.Information("连接断开" + conn);
         }
 
-        private void OnDataReceiveCallback(Connection conn, Google.Protobuf.IMessage msg)
-        {
-            MessageRouter.Instance.AddMessage(conn, msg);
-        }
     }
 }

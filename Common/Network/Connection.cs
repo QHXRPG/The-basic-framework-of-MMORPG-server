@@ -53,16 +53,16 @@ namespace Summer.Network
         private void _received(byte[] data)
         {
             //Log.Debug("收到消息：len={0}", data.Length);
-            //获取消息序列号
-            ushort code = GetUShort(data, 0);
-            var msg = ProtoHelper.ParseFrom(code, data, 2, data.Length - 2);
+            
+            ushort code = GetUShort(data, 0);  //获取消息序列号
+            var msg = ProtoHelper.ParseFrom(code, data, 2, data.Length - 2); //获取消息类型
 
             if (MessageRouter.Instance.Running)
             {
-                MessageRouter.Instance.AddMessage(this, msg);
+                MessageRouter.Instance.AddMessage(this, msg);  // 把消息类型加到消息队列中去
             }
 
-            OnDataReceived?.Invoke(this, msg);
+            OnDataReceived?.Invoke(this, msg);  // 触发 数据接收 事件
 
         }
 
@@ -86,11 +86,11 @@ namespace Summer.Network
             {
                 int code = ProtoHelper.SeqCode(message.GetType());
 
-                // 消息头部中包含了一个ushort类型的编码（code），占用了2个字节的空间
-                ds.WriteInt(message.CalculateSize() + 2);
-                ds.WriteUShort((ushort)code);   //消息的类型编码
+                
+                ds.WriteInt(message.CalculateSize() + 2); // 消息的长度 = 消息体 + 2个字节消息类型
+                ds.WriteUShort((ushort)code);   //消息的类型编码（短整形，2字节）
                 message.WriteTo(ds);
-                this.SocketSend(ds.ToArray());
+                this.SocketSend(ds.ToArray()); //获取数据流 DataStream 中的数据并返回一个包含该数据的字节数组
             }
         }
 
