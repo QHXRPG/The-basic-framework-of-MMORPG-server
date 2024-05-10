@@ -12,7 +12,7 @@ namespace Summer
     /// @Date 2023-02-16 21:13:03
     /// </summary>
     [Serializable]
-    public class ByteBuffer
+    public class ByteBuffer : IDisposable
     {
         //字节缓存区，需保证数组中都是大端模式数据，否则容易出错
         private byte[] _buf;

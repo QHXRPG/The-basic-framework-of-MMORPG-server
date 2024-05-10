@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using static Network.LengthFieldDecoder;
 using Google.Protobuf;
 using System.IO;
+using Serilog;
+using Google.Protobuf.Reflection;
 
 namespace Summer.Network
 {
@@ -46,10 +48,17 @@ namespace Summer.Network
         private void _received(byte[] data)
         {
             // 解包。把package -》msg
-            Proto.Package package = Proto.Package.Parser.ParseFrom(data);
-            Google.Protobuf.IMessage msg = ProtoHelper.Unpack(package);
+            using(var buf = ByteBuffer.Allocate(data, true))
+            {
+                //获取消息序列号
+                ushort code = buf.ReadUshort();
+                Type t = ProtoHelper.SeqType(code);
 
-            OnDataReceived?.Invoke(this, msg);
+                var desc = t.GetProperty("Descriptor").GetValue(t) as MessageDescriptor;
+                var msg = desc.Parser.ParseFrom(data, 2, data.Length - 2);
+                Log.Information("解析消息：code={0} - {1}", code, msg);
+                OnDataReceived?.Invoke(this, msg);
+            }
         }
 
         public void Close() // 主动关闭连接
@@ -65,39 +74,41 @@ namespace Summer.Network
         }
 
         #region 发送网络数据包的相关代码
-
+        // 4(报文长度) + 2（消息类型） + n（消息数据）
         public void Send(Google.Protobuf.IMessage message)
         {
-            // 把msg打包成Package
-            Proto.Package pack = ProtoHelper.Pack(message);
-
-            byte[] data = null;
-            using (MemoryStream ms = new MemoryStream())
+            using(ByteBuffer buf = ByteBuffer.Allocate(1024, true))
             {
-                pack.WriteTo(ms);  // 把传来的对象写入内存流当中，转为字节数组
-                int len = (int)ms.Length; // 数据本身长度
-
-                // 编码
-                data = new byte[4 + len];
-                byte[] lenbytes = BitConverter.GetBytes(len);
-                if (BitConverter.IsLittleEndian) //如果当前是小端平台，翻转成大端
-                    Array.Reverse(lenbytes);
-
-                // 数据拼接
-                Buffer.BlockCopy(lenbytes, 0, data, 0, 4); // 把消息的长度填充到消息头当中
-                Buffer.BlockCopy(ms.GetBuffer(), 0, data, 4, len); //把消息内容加到消息头中
+                int code = ProtoHelper.SeqCode(message.GetType());  // 通过类型获取序号
+                buf.WriteUshort((ushort)code);
+                buf.WriteBytes(message.ToByteArray());
+                this.Send(buf.ToArray());
             }
-            Send(data, 0, data.Length);  //  从0开始，发data的长度的数据
         }
 
-        public void Send(byte[] data, int offset, int count)  // 异步发送消息
+        public void Send(byte[] data)  // 异步发送消息
         {
-            lock(this)  //加锁
+            this.Send(data, 0, data.Length);
+        }
+
+        private void Send(byte[] data, int offset, int len)
+        {
+            lock(this)
             {
-                if (_socket.Connected)  // 如果socket已连接
+                if(_socket.Connected)
                 {
-                    // 把消息放到发送缓冲区
-                    _socket.BeginSend(data, offset, count, SocketFlags.None, new AsyncCallback(SendCallback), _socket);
+                    Log.Debug("发送消息：len={0}", data.Length);
+                    byte[] buffer = new byte[4 + len];
+                    byte[] lenBytes = BitConverter.GetBytes(len);
+
+                    if (BitConverter.IsLittleEndian) //如果当前是小端平台，翻转成大端
+                        Array.Reverse(lenBytes);
+
+                    // 数据拼接
+                    Buffer.BlockCopy(lenBytes, 0, data, 0, 4); // 把消息的长度填充到消息头当中
+                    Buffer.BlockCopy(buffer, offset, data, 4, len); //把消息内容加到消息头中
+                    _socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None,
+                                        new AsyncCallback(SendCallback), _socket);
                 }
             }
         }

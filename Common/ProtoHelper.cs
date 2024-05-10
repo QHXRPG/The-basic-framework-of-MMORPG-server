@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using Google.Protobuf;
 using System.IO;
 using System;
-using Proto.Message;
-using Proto;
 using System.Reflection;
 using Google.Protobuf.Reflection;
 using Serilog;
+using System.Linq;
 
 namespace Summer
 {
     /// <summary>
     /// Protobuf序列化与反序列化
-    /// 序列化：把一个对象转成一组序列
-    /// 反序列化：把一个二维序列转成对象
     /// </summary>
     public class ProtoHelper
     {
@@ -45,54 +42,72 @@ namespace Summer
             return msg;
         }
 
-        // 消息类型列表
+
         private static Dictionary<string, Type> _registry = new Dictionary<string, Type>();
+        private static Dictionary<int, Type> mDict1 = new Dictionary<int, Type>();
+        private static Dictionary<Type, int> mDict2 = new Dictionary<Type, int>();
 
         static ProtoHelper()
         {
-            // 用反射原理查询出当前程序集中所有的类型
+            List<string> list = new List<string>();
             var q = from t in Assembly.GetExecutingAssembly().GetTypes() select t;
             q.ToList().ForEach(t =>
             {
-                //找出属于IMessage的派生类
-                if (typeof(Google.Protobuf.IMessage).IsAssignableFrom(t))
+                if (typeof(IMessage).IsAssignableFrom(t))
                 {
-                    //从类型t中获取名为Descriptor的属性的值。
                     var desc = t.GetProperty("Descriptor").GetValue(t) as MessageDescriptor;
+                    _registry.Add(desc.FullName, t);
+                    list.Add(desc.FullName);
 
-                    //Descriptor是一个接口，用于描述Protobuf消息类型的元数据信息
-                    _registry.Add(desc.FullName, t); 
-                    Log.Debug("类型注册：{0}", desc.FullName);
                 }
             });
-        }
 
-        // 打包
-        public static Proto.Package Pack(Google.Protobuf.IMessage message)
-        {
-            Proto.Package package = new Proto.Package();
-            package.Fullname = message.Descriptor.FullName;  // 取出message的名字
-            package.Data = message.ToByteString();    // 取出message的二进制字符串
-            return package;
-        }
+            list.Sort((x, y) => {
+                //按照字符串长度排序，
+                if (x.Length != y.Length)
+                {
+                    return x.Length - y.Length;
+                }
+                //如果长度相同
+                return string.Compare(x, y, StringComparison.Ordinal);
+            });
 
-        //解包
-        public static IMessage Unpack(Proto.Package package)
-        {
-            // 从传入的Proto.Package对象中获取Fullname属性值，即消息类型的全名
-            string fullName = package.Fullname;
-
-            //检查 _registry 字典中是否包含该消息类型的全名
-            if (_registry.ContainsKey(fullName))
+            for (int i = 0; i < list.Count; i++)
             {
-                // 从 _registry 字典中获取对应的消息类型 Type t
-                Type t = _registry[fullName];
-
-                //从类型t中获取名为Descriptor的属性的值。
-                var desc = t.GetProperty("Descriptor").GetValue(t) as MessageDescriptor;
-                return desc.Parser.ParseFrom(package.Data);
+                var fname = list[i];
+                var t = _registry[fname];
+                Log.Debug("Proto类型注册：{0} - {1}", i, fname);
+                mDict1[i] = t;
+                mDict2[t] = i;
             }
-            return null;
+
         }
+
+        public static int SeqCode(Type type)
+        {
+            return mDict2[type];
+        }
+        public static Type SeqType(int code)
+        {
+            return mDict1[code];
+        }
+        /// <summary>
+        /// 根据消息编码进行解析
+        /// </summary>
+        /// <param name="typeCode"></param>
+        /// <param name="data"></param>
+        /// <param name="offset"></param>
+        /// <param name="len"></param>
+        /// <returns></returns>
+        public static IMessage ParseFrom(int typeCode, byte[] data, int offset, int len)
+        {
+            Type t = ProtoHelper.SeqType(typeCode);
+            var desc = t.GetProperty("Descriptor").GetValue(t) as MessageDescriptor;
+            var msg = desc.Parser.ParseFrom(data, offset, len);
+            Log.Information("解析消息：code={0} - {1}", typeCode, msg);
+            return msg;
+        }
+
+
     }
 }
