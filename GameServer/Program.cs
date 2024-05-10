@@ -17,7 +17,6 @@ namespace GameServer
         static void Main(string[] args)
         {
             NetService netserver = new NetService();
-            netserver.Init(32510);
             netserver.Start();
 
             MessageRouter.Instance.Start(4);  // 启动消息分发器，开四个线程

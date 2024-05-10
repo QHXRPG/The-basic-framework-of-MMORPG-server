@@ -16,7 +16,15 @@ namespace Summer.Network
     // 功能：发送、接收网络消息，关闭连接，断开通知
     public class Connection
     {
-        public Socket socket;
+        private Socket _socket;
+        public Socket Socket
+        {
+            get
+            {
+                return _socket;
+            }
+        }
+
         public delegate void DataReceivedCallback(Connection sender, byte[] data);
         public delegate void DisConnectedCallback(Connection sender);
 
@@ -25,7 +33,7 @@ namespace Summer.Network
 
         public Connection(Socket socket)
         {
-            this.socket = socket;
+            this._socket = socket;
 
             // 创建一个解码器  
             // 参数： socket， 缓冲区大小， 长度字段的位置下标、长度字段本身长度、长度字节和内容中间隔了几个字节、舍弃前面几个字节
@@ -44,11 +52,11 @@ namespace Summer.Network
         {
             try
             {
-                socket.Shutdown(SocketShutdown.Both);
+                _socket.Shutdown(SocketShutdown.Both);
             }
             catch { }
-            socket.Close();
-            socket = null;
+            _socket.Close();
+            _socket = null;
             OnDisconnected?.Invoke(this);
         }
 
@@ -73,17 +81,17 @@ namespace Summer.Network
         {
             lock(this)  //加锁
             {
-                if (socket.Connected)  // 如果socket已连接
+                if (_socket.Connected)  // 如果socket已连接
                 {
                     // 把消息放到发送缓冲区
-                    socket.BeginSend(data, offset, count, SocketFlags.None, new AsyncCallback(SendCallback), socket);
+                    _socket.BeginSend(data, offset, count, SocketFlags.None, new AsyncCallback(SendCallback), _socket);
                 }
             }
         }
 
         private void SendCallback(IAsyncResult ar)
         {
-            int len = socket.EndSend(ar);  //发送字节数
+            int len = _socket.EndSend(ar);  //发送字节数
         }
 
         #endregion

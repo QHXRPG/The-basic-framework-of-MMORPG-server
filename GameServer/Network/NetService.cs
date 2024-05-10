@@ -13,44 +13,36 @@ namespace GameServer.Network
 {
     public class NetService
     {
-        TcpSocketListener listener = null;
-        public NetService() { }
-
-        public void Init(int port)
+        TcpServer tcpServer;
+        public NetService()
         {
-            //TCP协议， 绑定端口号
-            // 0-65536   选一万以上的
-            //创建服务器主要依靠 Socket对象,服务器客户端两个Socket
-            // Socket ------------- Socket
-            // 绑定一个监听端口
-            listener = new TcpSocketListener("0.0.0.0", port);
-            listener.SocketConnected += OnClientConnected; // 将连接的套接字传出，传参给OnClientConnected
+            tcpServer = new TcpServer("0.0.0.0", 32510);
+            tcpServer.Connected += OnClientConnected;
+            tcpServer.Disconnected += OnDisconnectedCallback;
+            tcpServer.DataReceived += OnDataReceiveCallback;
         }
 
         public void Start()
         {
-            listener.Start();
+            tcpServer.Start();
+            MessageRouter.Instance.Start(10); //启动消息分发器
         }
 
-        private void OnClientConnected(object? sender, Socket socket)
+        private void OnClientConnected(Connection conn)
         {
-            var conn = new Connection(socket);
-            conn.OnDataReceived += OnDataReceiveCallback;
-            conn.OnDisconnected+= OnDisconnectedCallback;
-
-
+            Console.WriteLine("客户端接入");
         }
 
-        private void OnDisconnectedCallback(Connection sender)
+        private void OnDisconnectedCallback(Connection conn)
         {
-            Console.WriteLine("连接断开");
+            Console.WriteLine("连接断开" + conn);
         }
 
-        private void OnDataReceiveCallback(Connection sender, byte[] data)
+        private void OnDataReceiveCallback(Connection conn, byte[] data)
         {
             // 反序列化（字节 转 对象）
             package package = package.Parser.ParseFrom(data);  // 使用一个全局的package作为解析的数据包
-            MessageRouter.Instance.AddMessage(sender, package);
+            MessageRouter.Instance.AddMessage(conn, package);
         }
     }
 }

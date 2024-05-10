@@ -107,6 +107,7 @@ namespace Summer.Network
 
         public void Start(int ThreadCount)
         {
+            if (Running) return;
             this.Running = true;
             this.ThreadCount = Math.Min(Math.Max(1, ThreadCount), 200);  // 线程数大于1,小于200
 
