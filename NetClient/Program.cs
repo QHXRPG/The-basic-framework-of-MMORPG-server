@@ -39,10 +39,5 @@ msg.Username = "qhsdfsdfsdfx";
 msg.Password = "123";
 conn.Send(msg);
 
-byte s = 127;
-long ts = 127L;
-byte[] arr = Varint.VarintEncode(s);
-Log.Information("{0}", arr.Length);
-
 
 Console.ReadKey();
