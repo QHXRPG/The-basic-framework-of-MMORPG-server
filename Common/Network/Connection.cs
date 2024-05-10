@@ -25,7 +25,7 @@ namespace Summer.Network
             }
         }
 
-        public delegate void DataReceivedCallback(Connection sender, byte[] data);
+        public delegate void DataReceivedCallback(Connection sender, Google.Protobuf.IMessage data);
         public delegate void DisConnectedCallback(Connection sender);
 
         public DataReceivedCallback OnDataReceived; // 接收到数据
@@ -45,7 +45,11 @@ namespace Summer.Network
 
         private void _received(byte[] data)
         {
-            OnDataReceived?.Invoke(this, data);
+            // 解包。把package -》msg
+            Proto.Package package = Proto.Package.Parser.ParseFrom(data);
+            Google.Protobuf.IMessage msg = ProtoHelper.Unpack(package);
+
+            OnDataReceived?.Invoke(this, msg);
         }
 
         public void Close() // 主动关闭连接
@@ -64,10 +68,13 @@ namespace Summer.Network
 
         public void Send(Google.Protobuf.IMessage message)
         {
+            // 把msg打包成Package
+            Proto.Package pack = ProtoHelper.Pack(message);
+
             byte[] data = null;
             using (MemoryStream ms = new MemoryStream())
             {
-                message.WriteTo(ms);  // 把传来的对象写入内存流当中，转为字节数组
+                pack.WriteTo(ms);  // 把传来的对象写入内存流当中，转为字节数组
                 int len = (int)ms.Length; // 数据本身长度
 
                 // 编码

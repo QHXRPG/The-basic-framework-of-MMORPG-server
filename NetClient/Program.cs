@@ -39,19 +39,10 @@ msg.Username = "qhx";
 msg.Password = "123";
 conn.Send(msg);
 
-var pack = ProtoHelper.Pack(msg);
-var res = ProtoHelper.Unpack(pack);
+byte s = 127;
+long ts = 127L;
+byte[] arr = Varint.VarintEncode(s);
+Log.Information("{0}", arr.Length);
 
-Log.Information("{0} : {1}",res.GetType(), res);
+
 Console.ReadKey();
-
-
-static void SendMessage(Socket socket, byte[] body)  // 角色信息、消息信息、战斗记录 
-{
-    //  网络参数的基本单位是字节，所有模态的数据都要转化为字节进行传输
-    int len = body.Length; // 消息的真正的长度
-    byte[] lenBytes = BitConverter.GetBytes(len); // 转字节
-
-    socket.Send(lenBytes);  // 发四个字节的长度
-    socket.Send(body);   // 发送消息体
-}

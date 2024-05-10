@@ -23,8 +23,6 @@ namespace GameServer.Network
             tcpServer.DataReceived += OnDataReceiveCallback;
         }
 
-
-
         public void Start()
         {
             tcpServer.Start();
@@ -41,11 +39,9 @@ namespace GameServer.Network
             Log.Information("连接断开" + conn);
         }
 
-        private void OnDataReceiveCallback(Connection conn, byte[] data)
+        private void OnDataReceiveCallback(Connection conn, Google.Protobuf.IMessage msg)
         {
-            // 反序列化（字节 转 对象）
-            Proto.Package package = Proto.Package.Parser.ParseFrom(data);  // 使用一个全局的package作为解析的数据包
-            MessageRouter.Instance.AddMessage(conn, package);
+            MessageRouter.Instance.AddMessage(conn, msg);
         }
     }
 }
