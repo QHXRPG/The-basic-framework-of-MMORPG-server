@@ -27,7 +27,7 @@ namespace GameServer.Model
         {
             Log.Information("角色进入场景：" + character.entityId);
             CharacterDict[character.entityId] = character;
-            character.conn = conn;
+            character.conn = conn; // 设置这个角色所对应的客户端连接
             if(ConnCharater.ContainsKey(conn))
             {
                 ConnCharater[conn] = character; 
@@ -39,8 +39,11 @@ namespace GameServer.Model
             resp.EntityList.Add(character.GetData()); //把 NEntity 对象加入到 NEntity 列表中
             foreach(var kv in CharacterDict) 
             {
-                // 发送上线消息
-                kv.Value.conn.Send(resp);
+                if(kv.Value.conn != conn)
+                {
+                    // 发送上线消息
+                    kv.Value.conn.Send(resp);
+                }
             }
         }
     }

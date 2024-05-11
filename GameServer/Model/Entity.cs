@@ -44,7 +44,7 @@ namespace GameServer.Model
             var data = new NEntity();
             data.Id = this._entityId;
             data.Position = new NVector3() { X = position.x, Y = position.y, Z = position.z };
-            data.Direction = new NVector3() { X = direction.x, Y = -position.y, Z = -position.z };
+            data.Direction = new NVector3() { X = direction.x, Y = -direction.y, Z = -direction.z };
             return data;
         }
     }

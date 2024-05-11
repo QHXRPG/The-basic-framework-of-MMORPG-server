@@ -7,6 +7,7 @@ using Proto.Message;
 using Google.Protobuf;
 using Summer.Network;
 using Summer;
+using Proto;
 using Serilog;
 
 // 设置 Serilog 配置
