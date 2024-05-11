@@ -26,6 +26,12 @@ message GameEnterRequest{
     int32 characterId = 1;
 }
 
+// 加入游戏的响应
+message GameEnterResponse{
+    bool success = 1;
+    NEntity entity = 2;
+}
+
 message SpaceCharaterEnterResponse{
     int32 spaceId = 1;
     repeated NEntity entityList = 2;

@@ -32,18 +32,34 @@ namespace GameServer.Model
             {
                 ConnCharater[conn] = character; 
             }
-            // 广播给场景其它玩家
+            // 广播新客户端连接给场景其它玩家
             NEntity e = new NEntity();
             var resp = new SpaceCharaterEnterResponse();
             resp.SpaceId = this.Id;  // 当前场景的id
             resp.EntityList.Add(character.GetData()); //把 NEntity 对象加入到 NEntity 列表中
             foreach(var kv in CharacterDict) 
             {
+                // 发送角色进入场景的消息给其他人
                 if(kv.Value.conn != conn)
                 {
-                    // 发送上线消息
-                    kv.Value.conn.Send(resp);
+                    // 发送上线消息，把所有角色除了当前新连接的客户端
+                    // 其它客户端接收后，更新当前新连接的客户端的角色的位置
+                    kv.Value.conn.Send(resp);   
                 }
+            }
+
+            // 新上线的角色需要获取全部角色
+            foreach (var kv in CharacterDict)
+            {
+                if (kv.Value.conn == conn) // 当前客户端不需要接收自己的角色信息
+                    continue;
+
+                // 清空再添加，再清空再添加
+                resp.EntityList.Clear();                  
+                resp.EntityList.Add(kv.Value.GetData());
+
+                // 把所有角色挨个发出去, 当前的客户端接收后更新场景中其他人的位置
+                conn.Send(resp);    
             }
         }
     }
