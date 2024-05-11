@@ -23,6 +23,7 @@ namespace Common.Network.Server
             // 订阅进入游戏的消息
             MessageRouter.Instance.Subscribe<GameEnterRequest>(_GameEnterRequest);
             space.Name = "新手村";
+            space.Id = 6; // 新手村id
         }
 
         private void _GameEnterRequest(Connection conn, GameEnterRequest msg)

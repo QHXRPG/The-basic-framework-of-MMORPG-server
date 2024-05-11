@@ -19,11 +19,16 @@ enum NState{
 message NEntity{
     int32 id = 1;
     NVector3 position = 3;
-    NVector3 rotation = 4;
+    NVector3 direction = 4;
 }
 
 message GameEnterRequest{
     int32 characterId = 1;
+}
+
+message SpaceCharaterEnterResponse{
+    int32 spaceId = 1;
+    repeated NEntity entityList = 2;
 }
 
 // 玩家 发给 服务器

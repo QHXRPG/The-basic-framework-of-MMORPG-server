@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Proto.Message;
 using Summer;
 
 namespace GameServer.Model
@@ -10,10 +11,10 @@ namespace GameServer.Model
     // 在MMO世界当中同步的实体
     public class Entity
     {
-        private int id;
+        private int _entityId;
         private Vector3Int position;  // 位置
         private Vector3Int direction; //方向
-        public int Id { get { return id; } }
+        public int entityId { get { return _entityId; } }
 
         public Vector3Int Position { 
             get { return position; }
@@ -27,14 +28,24 @@ namespace GameServer.Model
 
         public Entity(int id)
         {
-            this.id = id;
+            this._entityId = id;
         }
 
         public Entity(int id, Vector3Int position, Vector3Int direction)
         {
             this.position = position;
             this.direction = direction; 
-            this.id = id;
+            this._entityId = id;
+        }
+
+        // 返回一个用于网络传输的 NEntity 对象
+        public NEntity GetData() 
+        {
+            var data = new NEntity();
+            data.Id = this._entityId;
+            data.Position = new NVector3() { X = position.x, Y = position.y, Z = position.z };
+            data.Direction = new NVector3() { X = direction.x, Y = -position.y, Z = -position.z };
+            return data;
         }
     }
 }

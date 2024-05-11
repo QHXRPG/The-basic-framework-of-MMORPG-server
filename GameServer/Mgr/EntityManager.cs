@@ -19,7 +19,7 @@ namespace GameServer.Mgr
             lock(this)
             {
                 var entity = new Entity(index++, Vector3Int.zero, Vector3Int.zero);
-                AllEntity[entity.Id] = entity;
+                AllEntity[entity.entityId] = entity;
                 return entity;
             }
         }
