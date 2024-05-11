@@ -188,7 +188,7 @@ namespace Summer.Network
             // 发现消息，触发订阅，
             var met = fireMethod.MakeGenericMethod(message.GetType());
             met.Invoke(this, new object[] { sender, message }); // 调用
-
+            Log.Debug(":" + met);
             //找属性
             var t = message.GetType();
             foreach (var p in t.GetProperties())

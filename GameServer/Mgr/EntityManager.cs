@@ -24,6 +24,17 @@ namespace GameServer.Mgr
             }
         }
 
+        public int NewEntityId
+        {
+            get 
+            { 
+                lock(this) 
+                { 
+                    return index++; 
+                }
+            }
+        }
+
         public EntityManager() { }
     }
 }

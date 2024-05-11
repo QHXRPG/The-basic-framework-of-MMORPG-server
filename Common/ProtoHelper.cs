@@ -105,7 +105,5 @@ namespace Summer
             Log.Information("解析消息：code={0} - {1}", typeCode, msg);
             return msg;
         }
-
-
     }
 }

@@ -11,6 +11,7 @@ namespace GameServer.Model
     {
         public Character(int id, Vector3Int position, Vector3Int direction) : base(id, position, direction)
         {
+
         }
     }
 }
