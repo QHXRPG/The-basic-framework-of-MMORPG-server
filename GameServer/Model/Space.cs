@@ -52,7 +52,7 @@ namespace GameServer.Model
                 }
             }
 
-            // 新上线的角色需要获取全部角色
+            // 新上线的角色需要获取全部角色的信息
             foreach (var kv in CharacterDict)
             {
                 if (kv.Value.conn == conn) // 当前客户端不需要接收自己的角色信息
@@ -64,6 +64,22 @@ namespace GameServer.Model
 
                 // 把所有角色挨个发出去, 当前的客户端接收后更新场景中其他人的位置
                 conn.Send(resp);    
+            }
+        }
+
+        // 角色离开地图 (客户端断开连接、去其它场景)
+        public void CharacterLeave(Connection conn, Character character) 
+        {
+            Log.Information("角色离开场景：" + character.entityId);
+            conn.Set<Character>(null);  // 取消该连接的当前场景记录
+            CharacterDict.Remove(character.entityId);  // 将 该连接 从 当前场景中的CharacterDict 中移除
+
+            // 通知其它客户端，该客户端已离开该场景
+            SpaceCharaterLeaveResponse resp = new SpaceCharaterLeaveResponse();
+            resp.EntityId = character.entityId;
+            foreach(var kv in CharacterDict) 
+            {
+                kv.Value.conn.Send(resp);
             }
         }
 

@@ -51,6 +51,10 @@ message SpaceCharaterEnterResponse{
     repeated NEntity entityList = 2;
 }
 
+message SpaceCharaterLeaveResponse{
+    int32 entityId = 1;
+}
+
 // 玩家 发给 服务器
 message Request{
     UserRegisterRequest userRegister = 1;

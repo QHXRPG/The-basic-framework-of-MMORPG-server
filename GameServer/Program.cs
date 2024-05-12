@@ -21,8 +21,9 @@ namespace GameServer
             // 设置 Serilog 配置, 保存在logs\\client-log.txt中，每隔三天删除一次日志
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.Console()
-                .WriteTo.File("logs\\client-log.txt", rollingInterval:RollingInterval.Day, retainedFileCountLimit:3)
+                .WriteTo.Async(a=>a.Console())
+                .WriteTo.File("logs\\client-log.txt", 
+                                rollingInterval:RollingInterval.Day, retainedFileCountLimit:3)
                 .CreateLogger();
 
             // 网络服务模块

@@ -9,6 +9,7 @@ using Proto.Message;
 using Summer.Network;
 using Summer;
 using Serilog;
+using GameServer.Model;
 
 namespace GameServer.Network
 {
@@ -39,6 +40,14 @@ namespace GameServer.Network
         private void OnDisconnectedCallback(Connection conn)
         {
             Log.Information("连接断开" + conn);
+
+            // 通知其它客户端，该客户端已离开该场景
+            var space = conn.Get<Space>();
+            if(space != null)
+            {
+                var co = conn.Get<Character>();
+                space.CharacterLeave(conn, co);
+            }
         }
 
     }
