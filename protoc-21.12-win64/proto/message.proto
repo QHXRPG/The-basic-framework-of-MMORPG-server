@@ -2,6 +2,14 @@ syntax = "proto3";
 
 package Proto.Message;
 
+message HeartBeatRequest{
+    
+}
+
+message HeartBeatResponse{
+
+}
+
 message NVector3{
     int32 x = 1;
     int32 y = 2;

@@ -40,7 +40,8 @@ namespace Summer.Network
         }
 
         private void BeginReceive(){
-            mSocket.BeginReceive(buffer, startIndex, buffer.Length - startIndex, SocketFlags.None, new AsyncCallback(ReceiveCallback), null);
+            mSocket.BeginReceive(buffer, startIndex, buffer.Length - startIndex, 
+                                SocketFlags.None, new AsyncCallback(ReceiveCallback), null);
         }
 
         private void ReceiveCallback(IAsyncResult ar)
@@ -63,8 +64,10 @@ namespace Summer.Network
             {
                 _disconnected();
             }
-
-
+            catch (ObjectDisposedException)
+            {
+                _disconnected();
+            }
         }
 
         private void doReceive(int len)
@@ -100,14 +103,13 @@ namespace Summer.Network
 
         private void _disconnected()
         {
-
             try
             {
                 Disconnected?.Invoke();
-                mSocket.Shutdown(SocketShutdown.Both);
+                mSocket?.Shutdown(SocketShutdown.Both);
             }
             catch { } // throws if client process has already closed
-            mSocket.Close();
+            mSocket?.Close();
             mSocket = null;
         }
 
