@@ -13,7 +13,7 @@ using Serilog;
 // 设置 Serilog 配置
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
-    .WriteTo.Console()
+    .WriteTo.Async(a => a.Console())
     .CreateLogger();
 
 Log.Information("Hello, World!");

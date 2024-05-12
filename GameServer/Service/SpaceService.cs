@@ -19,7 +19,7 @@ namespace GameServer.Service
         private Dictionary<int, Space> spaceDict = new Dictionary<int, Space>();    
         public void Start()
         {
-            // 订阅 位置同步请求 的消息
+            // 订阅 位置同步请求 的消息, 有角色移动便会触发
             MessageRouter.Instance.Subscribe<SpaceEntitySyncRequest>(_SpaceEntitySyncRequest);
 
             //创建空间对象:新手村场景
@@ -39,7 +39,6 @@ namespace GameServer.Service
             var sp = conn.Get<Space>();
             if (sp == null) return;
             sp.UpdataEntity(msg.EntitySync);
-
         }
     }
 }
