@@ -16,7 +16,7 @@ namespace Summer.Network
     /// 通用网络连接，可以继承此类实现功能拓展
     /// 职责：发送消息，关闭连接，断开回调，接收消息回调，
     /// </summary>
-    public class Connection
+    public class Connection : TypeAttributeStore
     {
 
         public delegate void DataReceivedCallback(Connection sender, IMessage data);

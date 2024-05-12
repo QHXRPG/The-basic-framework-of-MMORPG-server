@@ -1,4 +1,5 @@
-﻿using Summer;
+﻿using Proto.Message;
+using Summer;
 using Summer.Network;
 using System;
 using System.Collections.Generic;

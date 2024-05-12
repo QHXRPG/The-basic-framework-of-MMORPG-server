@@ -31,12 +31,12 @@ namespace GameServer
             Log.Debug("服务器启动");
 
             // 玩家服务模块
-            UserService userService = new UserService();
+            UserService userService = UserService.Instance;
             userService.Start();
             Log.Debug("玩家服务启动");
 
             // 地图同步服务
-            SpaceService spaceService = new SpaceService();
+            SpaceService spaceService = SpaceService.Instance;
             spaceService.Start();
             Log.Debug("地图同步服务启动");
 

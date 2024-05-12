@@ -26,6 +26,8 @@ namespace GameServer.Model
         public void CharacterJoin(Connection conn, Character character)
         {
             Log.Information("角色进入场景：" + character.entityId);
+            conn.Set<Character>(character);   // 把角色character存入对应的conn连接当中
+            conn.Set<Space>(this);            // 把场景 space 存入对应的 conn 连接当中
             CharacterDict[character.entityId] = character;
             character.conn = conn; // 设置这个角色所对应的客户端连接
             if(ConnCharater.ContainsKey(conn))
@@ -60,6 +62,30 @@ namespace GameServer.Model
 
                 // 把所有角色挨个发出去, 当前的客户端接收后更新场景中其他人的位置
                 conn.Send(resp);    
+            }
+        }
+
+
+
+        // 广播更新Entity的信息
+        public void UpdataEntity(NEntitySync entitySync)
+        {
+            Log.Information("UpdataEntity{0}", entitySync);
+
+            // 广播自己的位置给其他人，不需要广播给自己，因为自己的客户端能够看到
+            foreach (var kv in CharacterDict)
+            {
+                if (kv.Value.entityId == entitySync.Entity.Id) // 自己
+                {
+                    // 把传进来的 Entity 的状态 赋值给 服务器对象Entity当中
+                    kv.Value.SetEntityData(entitySync.Entity);
+                }
+                else  //其他人
+                {
+                    SpaceEntitySyncResponse resp = new SpaceEntitySyncResponse();   
+                    resp.EntitySync = entitySync;
+                    kv.Value.conn.Send(resp);
+                }
             }
         }
     }

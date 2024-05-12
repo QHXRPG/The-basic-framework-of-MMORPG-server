@@ -28,9 +28,12 @@ namespace GameServer.Network
             MessageRouter.Instance.Start(10); //启动消息分发器
         }
 
+
+        //客户端接入
         private void OnClientConnected(Connection conn)
         {
             Log.Information("客户端接入");
+
         }
 
         private void OnDisconnectedCallback(Connection conn)

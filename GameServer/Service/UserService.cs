@@ -9,21 +9,20 @@ using Serilog;
 using Summer;
 using GameServer.Model;
 using GameServer.Mgr;
+using GameServer.Service;
 
 namespace Common.Network.Server
 {
     // 玩家服务： 注册登录，创建角色，进入游戏
-    internal class UserService
+    internal class UserService : Singleton<UserService>
     {
-        //创建空间对象:新手村场景
-        Space space = new Space();
+
 
         public void Start()
         {
             // 订阅进入游戏的消息
             MessageRouter.Instance.Subscribe<GameEnterRequest>(_GameEnterRequest);
-            space.Name = "新手村";
-            space.Id = 6; // 新手村id
+
         }
 
         private void _GameEnterRequest(Connection conn, GameEnterRequest msg)
@@ -42,6 +41,7 @@ namespace Common.Network.Server
             conn.Send(response);
 
             //将新角色加入到地图
+            var space = SpaceService.Instance.GetSpace(6);  
             space.CharacterJoin(conn, character); //地图广播
         }
     }

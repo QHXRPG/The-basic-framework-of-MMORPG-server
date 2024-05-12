@@ -47,5 +47,16 @@ namespace GameServer.Model
             data.Direction = new NVector3() { X = direction.x, Y = -direction.y, Z = -direction.z };
             return data;
         }
+
+        // 把网络数值覆盖到本地去
+        public void SetEntityData(NEntity entity)
+        {
+            position.x = entity.Position.X;
+            position.y = entity.Position.Y;
+            position.z = entity.Position.Z;
+            direction.x = entity.Direction.X;
+            direction.y = entity.Direction.Y;
+            direction.z = entity.Direction.Z;
+        }
     }
 }
