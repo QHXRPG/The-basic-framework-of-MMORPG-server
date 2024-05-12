@@ -9,7 +9,7 @@ using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 using Serilog;
 using Common.Network.Server;
-
+using GameServer.Service;
 
 
 namespace GameServer
@@ -35,7 +35,12 @@ namespace GameServer
             userService.Start();
             Log.Debug("玩家服务启动");
 
-            // 消息订阅：用户登录消息
+            // 地图同步服务
+            SpaceService spaceService = new SpaceService();
+            spaceService.Start();
+            Log.Debug("地图同步服务启动");
+
+            // 用户登录消息
             MessageRouter.Instance.Subscribe<UserLoginRequest>(OnUserLoginRequest);
 
             while(true)

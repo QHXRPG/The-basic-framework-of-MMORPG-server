@@ -8,18 +8,32 @@ message NVector3{
     int32 z = 3;
 }
 
-enum NState{
-    None = 0;
-    Idle = 1;
-    Move = 2;
-    Jump = 3;
-    Ride = 4;
+enum EntityState{
+    NONE = 0;
+    IDLE = 1;
+    MOVE = 2;
+    JUMP = 3;
+    RIDE = 4;
 }
 
 message NEntity{
     int32 id = 1;
     NVector3 position = 3;
     NVector3 direction = 4;
+}
+
+// 同步消息
+message NEntitySync{
+    NEntity entity = 1;
+    EntityState state = 4;
+}
+
+message SpaceEntitySyncRequest{
+    NEntitySync entitySync = 1;
+}
+
+message SpaceEntitySyncResponse{
+    NEntitySync entitySync = 1;
 }
 
 message GameEnterRequest{
