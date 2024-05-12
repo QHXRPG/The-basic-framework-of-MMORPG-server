@@ -26,7 +26,7 @@ namespace GameServer.Service
             Space space = new Space();
             space.Name = "新手村";
             space.Id = 6; // 新手村id
-            spaceDict[space.Id] = space;    
+            spaceDict[space.Id] = space;
         }
 
         public Space GetSpace(int spaceId)

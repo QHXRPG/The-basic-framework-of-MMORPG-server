@@ -30,7 +30,9 @@ namespace Common.Network.Server
             Log.Information("有玩家进入游戏");
             int entityId = EntityManager.Instance.NewEntityId;  // 获得一个独有的实体Id
             Random random = new Random();
-            Vector3Int pos = new Vector3Int(500+random.Next(-5, 5), 0, 500 + random.Next(-5, 5));  // 玩家坐标
+            Vector3Int pos = new Vector3Int(500+random.Next(-5, 5), 
+                                            0, 500 + random.Next(-5, 5));// 玩家坐标
+            pos *= 1000;
             Vector3Int r_pos = new Vector3Int(0, 0, 0);
             Character character = new Character(entityId, pos, r_pos); // 分配id、坐标、方向
             

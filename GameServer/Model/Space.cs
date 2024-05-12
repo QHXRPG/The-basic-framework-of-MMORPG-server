@@ -28,6 +28,8 @@ namespace GameServer.Model
             Log.Information("角色进入场景：" + character.entityId);
             conn.Set<Character>(character);   // 把角色character存入对应的conn连接当中
             conn.Set<Space>(this);            // 把场景 space 存入对应的 conn 连接当中
+            character.SpaceId = this.Id;    
+
             CharacterDict[character.entityId] = character;
             character.conn = conn; // 设置这个角色所对应的客户端连接
             if(ConnCharater.ContainsKey(conn))
@@ -64,8 +66,6 @@ namespace GameServer.Model
                 conn.Send(resp);    
             }
         }
-
-
 
         // 广播更新Entity的信息
         public void UpdataEntity(NEntitySync entitySync)
