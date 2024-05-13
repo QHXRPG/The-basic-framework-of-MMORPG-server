@@ -83,7 +83,7 @@ namespace Summer.Network
             {
                 int code = ProtoHelper.SeqCode(message.GetType());
 
-                Console.WriteLine("发送类型：{0}", code);
+                // Console.WriteLine("发送类型：{0}", code);
                 ds.WriteInt(message.CalculateSize() + 2); // 消息的长度 = 消息体 + 2个字节消息类型
                 ds.WriteUShort((ushort)code);   //消息的类型编码（短整形，2字节）
                 message.WriteTo(ds);

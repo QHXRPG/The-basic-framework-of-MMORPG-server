@@ -47,6 +47,7 @@ namespace GameServer.Network
                 // 判断是否超时，若超时，关闭连接
                 if(offsetTime.TotalSeconds > 10)
                 {
+                    Log.Information("连接{0}心跳包等待超时，断开", kv.Key);
                     Connection conn = kv.Key;
                     conn.Close();
                     heartBeatPairs.Remove(kv.Key);
@@ -58,6 +59,7 @@ namespace GameServer.Network
         // 收到心跳包
         private void _HeartBeatRequest(Connection conn, HeartBeatRequest msg)
         {
+            heartBeatPairs[conn] = DateTime.Now; //记录心跳时间
             Log.Information("收到心跳包:" + conn);
             HeartBeatResponse resp = new HeartBeatResponse();
             conn.Send(resp);

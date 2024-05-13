@@ -86,8 +86,6 @@ namespace GameServer.Model
         // 广播更新Entity的信息
         public void UpdataEntity(NEntitySync entitySync)
         {
-            Log.Information("UpdataEntity{0}", entitySync);
-
             // 广播自己的位置给其他人，不需要广播给自己，因为自己的客户端能够看到
             foreach (var kv in CharacterDict)
             {
