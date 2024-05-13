@@ -10,6 +10,7 @@ using static System.Net.Mime.MediaTypeNames;
 using Serilog;
 using Common.Network.Server;
 using GameServer.Service;
+using GameServer.Database;
 
 
 namespace GameServer
@@ -25,6 +26,7 @@ namespace GameServer
                 .WriteTo.Async(a=>a.File("logs\\client-log.txt", 
                                 rollingInterval:RollingInterval.Day, retainedFileCountLimit:3))
                 .CreateLogger();
+
 
             // 网络服务模块
             NetService netserver = new NetService();
@@ -44,7 +46,8 @@ namespace GameServer
             // 用户登录消息
             MessageRouter.Instance.Subscribe<UserLoginRequest>(OnUserLoginRequest);
 
-            while(true)
+
+            while (true)
             {
                 Thread.Sleep(100);
             }

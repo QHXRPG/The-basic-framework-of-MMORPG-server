@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Summer;
+using GameServer.Mgr;
 
 namespace GameServer.Model
 {
@@ -14,7 +15,7 @@ namespace GameServer.Model
         public Actor(int id, Vector3Int position, Vector3Int direction)
             : base(id, position, direction)
         {
-
+            
         }
     }
 }

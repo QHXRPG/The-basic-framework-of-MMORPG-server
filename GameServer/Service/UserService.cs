@@ -10,6 +10,7 @@ using Summer;
 using GameServer.Model;
 using GameServer.Mgr;
 using GameServer.Service;
+using GameServer.Database;
 
 namespace Common.Network.Server
 {
@@ -23,6 +24,31 @@ namespace Common.Network.Server
             // 订阅进入游戏的消息
             MessageRouter.Instance.Subscribe<GameEnterRequest>(_GameEnterRequest);
 
+            // 用户登录请求
+            MessageRouter.Instance.Subscribe<UserLoginRequest>(_UserLoginRequest);
+
+        }
+
+        private void _UserLoginRequest(Connection conn, UserLoginRequest msg)
+        {
+            var dbPlayer = Db.fsql.Select<DbPlayer>()
+                .Where(p => p.Username == msg.Username)
+                .Where(p => p.Password == msg.Password)
+                .First();
+
+            UserLoginReponse response = new UserLoginReponse();
+            if (dbPlayer != null) 
+            {
+                response.Success = true;
+                response.Message = "登录成功";
+                conn.Set<DbPlayer>(dbPlayer);  // 登录成功后，在conn连接里记录玩家信息
+            }
+            else
+            {
+                response.Success = false;
+                response.Message = "用户名或密码不正确";
+            }
+            conn.Send(response);
         }
 
         private void _GameEnterRequest(Connection conn, GameEnterRequest msg)

@@ -32,7 +32,6 @@ namespace GameServer.Service
         public Space GetSpace(int spaceId)
         { return spaceDict[spaceId]; }
 
-
         private void _SpaceEntitySyncRequest(Connection conn, SpaceEntitySyncRequest msg)
         {
             // 通过conn拿到角色所在的地图
