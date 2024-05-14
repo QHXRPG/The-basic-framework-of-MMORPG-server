@@ -14,7 +14,7 @@ namespace GameServer.Model
         // 当前角色客户端的连接
         public Connection conn;
 
-        public Character(int id, Vector3Int position, Vector3Int direction) : base(id, position, direction)
+        public Character(int entityId, Vector3Int position, Vector3Int direction) : base(entityId, position, direction)
         {
 
         }

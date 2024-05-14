@@ -52,6 +52,7 @@ message GameEnterRequest{
 message GameEnterResponse{
     bool success = 1;
     NEntity entity = 2;
+    NCharacter charater = 3;
 }
 
 message SpaceCharaterEnterResponse{
@@ -96,4 +97,50 @@ message UserLoginReponse{
     bool success = 1;
     int32 code = 2;
     string message = 3;
+}
+
+message CharacterCreateRequest{
+    string name = 1;
+    int32 JobType = 2;
+}
+
+
+message NCharacter{
+    int32 id = 1;
+    int32 type_id = 2;
+    int32 entity_id = 3;
+    string name = 4;
+    int32 level = 5;
+    int64 exp = 6;
+    int32 spaceId = 7;
+    int64 gold = 8;
+    NEntity entity = 9;
+    int32 hp = 10;
+    int32 mp = 11;
+}
+
+message CharacterCreateResponse{
+    bool success = 1;
+    string message = 2;
+    NCharacter character = 3;
+}
+
+// 查询角色列表的请求
+message CharacterListRequest{
+}
+
+// 角色列表的响应
+message CharacterListResponse{
+	repeated NCharacter characterList = 1;
+}
+
+// 删除角色的请求
+message CharacterDeleteRequest{
+	int32 characterId = 1;
+}
+
+// 删除角色的响应
+message CharacterDeleteResponse{
+	bool success = 1;
+	string message = 2;
 }
