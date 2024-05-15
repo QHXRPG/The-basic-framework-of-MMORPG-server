@@ -214,25 +214,13 @@ namespace Common.Network.Server
             var player = conn.Get<DbPlayer>();
 
             // 查询数据库的角色
-            var r = Db.fsql.Select<DbCharacter>()
+            var DbCharacter = Db.fsql.Select<DbCharacter>()
                         .Where(t => t.PlayerId == player.Id)
                         .Where(t => t.Id == msg.CharacterId)
                         .First();
 
             // 把数据库角色 转换为 游戏对象
-            Character character = new Character(entityId, new Vector3Int(r.X, r.Y, r.Z), Vector3Int.zero);
-            character.Id = r.Id;
-            character.Name = r.Name;
-            character.Info.Name = r.Name;
-            character.Info.Id = r.Id;        // 主键
-            character.Info.TypeId = r.JobId;   // 角色类型
-            character.Info.Level = r.Level;
-            character.Info.Exp = r.Exp;
-            character.Info.SpaceId = r.SpaceId;
-            character.Info.Gold = r.Gold;
-            character.Info.Hp = r.Hp;
-            character.Info.Mp = r.Mp;
-            character.Data = r;
+            Character character = CharacterManager.Instance.CreateCharacter(DbCharacter);
 
             //通知玩家登录成功
             GameEnterResponse response = new GameEnterResponse();
@@ -242,7 +230,7 @@ namespace Common.Network.Server
             conn.Send(response);
 
             //将新角色加入到地图
-            var space = SpaceService.Instance.GetSpace(r.SpaceId);  
+            var space = SpaceService.Instance.GetSpace(DbCharacter.SpaceId);  
             space.CharacterJoin(conn, character); //地图广播
         }
     }

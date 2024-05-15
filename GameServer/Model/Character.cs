@@ -12,6 +12,13 @@ using System.Threading.Tasks;
 
 namespace GameServer.Model
 {
+    /*
+        Character（角色）：
+            Character通常特指玩家控制的角色，在游戏中扮演特定的角色扮演者。
+            Character通常具有独特的外观、技能、属性等特征，与其他角色有所区别。
+            Character通常是游戏中的主要角色之一，玩家可以操控其行为和决策。
+            Character通常是游戏中的重要角色之一，具有故事性和情感性。
+     */
     public class Character : Actor
     {
         // 当前角色客户端的连接
@@ -22,15 +29,7 @@ namespace GameServer.Model
 
         public Character(int entityId, Vector3Int position, Vector3Int direction) : base(entityId, position, direction)
         {
-            // 从数据库中获取 DbCharacter 实例
-            var repo = Db.fsql.GetRepository<DbCharacter>();
 
-
-            // 用中心计时器 单线程计时 执行 保存角色位置 任务（每两秒一次）
-            Schedule.Instance.AddTask(()=>
-            {
-                repo.UpdateAsync(Data);
-            }, 2);  // 每两秒调用一次Save
         }
 
 

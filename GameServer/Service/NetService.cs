@@ -10,6 +10,7 @@ using Summer.Network;
 using Summer;
 using Serilog;
 using GameServer.Model;
+using GameServer.Mgr;
 
 namespace GameServer.Network
 {
@@ -78,6 +79,7 @@ namespace GameServer.Network
         {
             heartBeatPairs.Remove(conn);
             Log.Information("连接断开" + conn);
+            Character character = conn.Get<Character>();  
 
             // 通知其它客户端，该客户端已离开该场景
             var space = conn.Get<Character>()?.Space;
@@ -85,6 +87,7 @@ namespace GameServer.Network
             {
                 var co = conn.Get<Character>();
                 space.CharacterLeave(conn, co);
+                CharacterManager.Instance.RemoveCharacter(character.Id);
             }
         }
 
