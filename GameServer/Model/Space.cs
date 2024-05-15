@@ -17,11 +17,22 @@ namespace GameServer.Model
         public int Id { get; set; }
         public string Name { get; set; }
 
+        public SpaceDefine Def { get; set; }
+
         // 当前场景中全部的角色
         public Dictionary<int, Character> CharacterDict = new Dictionary<int, Character>();
 
         // 记录连接对应的角色
         private Dictionary<Connection, Character> ConnCharater = new Dictionary<Connection, Character>();
+
+        public Space() { }
+
+        public Space(SpaceDefine def)
+        {
+            this.Def = def;
+            this.Id = def.SID;
+            this.Name = def.Name;   
+        }
 
         public void CharacterJoin(Connection conn, Character character)
         {

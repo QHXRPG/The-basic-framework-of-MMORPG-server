@@ -14,7 +14,7 @@ namespace GameServer.Model
         private int _entityId;
         private Vector3Int position;  // 位置
         private Vector3Int direction; //方向
-        private int spaceId; // 所在地图ID
+        private int spaceId; // 所在地图ID 
 
         public int SpaceId
         {

@@ -28,6 +28,8 @@ namespace GameServer
                                 rollingInterval: RollingInterval.Day, retainedFileCountLimit: 3))
                 .CreateLogger();
 
+            // 加载Json配置文件
+            DataManager.Instance.Init();
 
             // 网络服务模块
             NetService netserver = new NetService();
