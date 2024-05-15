@@ -30,9 +30,10 @@ namespace GameServer.Mgr
             }
         }
 
+        // 获取场景，如果不存在，就返回空
         public Space GetSpace(int spaceId) 
         {
-            return spaceDict[spaceId];  
+            return spaceDict.GetValueOrDefault(spaceId, null);
         }
 
     }

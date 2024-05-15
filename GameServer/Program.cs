@@ -12,6 +12,7 @@ using Common.Network.Server;
 using GameServer.Service;
 using GameServer.Database;
 using System.Numerics;
+using Summer;
 
 
 namespace GameServer
@@ -45,6 +46,10 @@ namespace GameServer
             SpaceService spaceService = SpaceService.Instance;
             spaceService.Start();
             Log.Debug("地图同步服务启动");
+
+            // 中心计时器
+            Schedule.Instance.Start();
+            Log.Debug("中心计时器启动");
 
             // 用户登录消息
             MessageRouter.Instance.Subscribe<UserLoginRequest>(OnUserLoginRequest);

@@ -80,7 +80,7 @@ namespace GameServer.Network
             Log.Information("连接断开" + conn);
 
             // 通知其它客户端，该客户端已离开该场景
-            var space = conn.Get<Space>();
+            var space = conn.Get<Character>()?.Space;
             if(space != null)
             {
                 var co = conn.Get<Character>();

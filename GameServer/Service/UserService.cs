@@ -18,8 +18,6 @@ namespace Common.Network.Server
     // 玩家服务： 注册登录，创建角色，进入游戏
     internal class UserService : Singleton<UserService>
     {
-
-
         public void Start()
         {
             // 订阅进入游戏的消息
@@ -45,6 +43,7 @@ namespace Common.Network.Server
         private void _UserRegisterRequest(Connection conn, UserRegisterRequest msg)
         {
             UserRegisterReponse userRegisterReponse = new UserRegisterReponse();
+
             // 查询数据库中是否已存在相同的用户名
             var existingPlayer = Db.fsql.Select<DbPlayer>().Where(p => p.Username == msg.Username).First();
 
@@ -89,32 +88,26 @@ namespace Common.Network.Server
         private void _CharacterListRequest(Connection conn, CharacterListRequest msg)
         {
             var player = conn.Get<DbPlayer>(); // 通过连接在数据库中拿到玩家的信息
-            // 如果该玩家角色数量为0
-            if(! Db.fsql.Select<DbCharacter>().Where(t => t.PlayerId == player.Id).Any())
-            {
 
-            }
-            else
+            // 从数据库中查询到玩家的全部角色
+            var list = Db.fsql.Select<DbCharacter>().Where(t => t.PlayerId == player.Id).ToList();
+            CharacterListResponse characterListResponse = new CharacterListResponse();
+            foreach (var item in list)
             {
-                // 从数据库中查询到玩家的全部角色
-                var list = Db.fsql.Select<DbCharacter>().Where(t => t.PlayerId == player.Id).ToList();
-                CharacterListResponse characterListResponse = new CharacterListResponse();
-                foreach (var item in list)
+                // Entity 以及 EntityId 需要 开始游戏 后才给值
+                characterListResponse.CharacterList.Add(new NCharacter()
                 {
-                    // Entity 以及 EntityId 需要 开始游戏 后才给值
-                    characterListResponse.CharacterList.Add(new NCharacter()
-                    {
-                        Id = item.Id,
-                        TypeId = item.JobId,
-                        Name = item.Name,
-                        Level = item.Level,
-                        Exp = item.Exp,
-                        SpaceId = item.SpaceId,
-                        Gold = item.Gold,
-                    });
-                }
-                conn.Send(characterListResponse);
+                    Id = item.Id,
+                    TypeId = item.JobId,
+                    Name = item.Name,
+                    Level = item.Level,
+                    Exp = item.Exp,
+                    SpaceId = item.SpaceId,
+                    Gold = item.Gold,
+                });
             }
+            conn.Send(characterListResponse);
+            
         }
 
         private void _CharacterCreateRequest(Connection conn, CharacterCreateRequest msg)
@@ -239,7 +232,8 @@ namespace Common.Network.Server
             character.Info.Gold = r.Gold;
             character.Info.Hp = r.Hp;
             character.Info.Mp = r.Mp;
-            
+            character.Data = r;
+
             //通知玩家登录成功
             GameEnterResponse response = new GameEnterResponse();
             response.Success = true;
@@ -248,7 +242,7 @@ namespace Common.Network.Server
             conn.Send(response);
 
             //将新角色加入到地图
-            var space = SpaceService.Instance.GetSpace(6);  
+            var space = SpaceService.Instance.GetSpace(r.SpaceId);  
             space.CharacterJoin(conn, character); //地图广播
         }
     }

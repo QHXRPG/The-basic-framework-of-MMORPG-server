@@ -11,9 +11,14 @@ namespace GameServer.Model
 {
     public class Actor : Entity
     {
-        public int Id;
+        public int Id{get; set; }
 
         public string Name { get; set; }
+
+        public int Speed {  get; set; }
+
+        // 当前Actor所在的场景
+        public Space Space { get; set; }
 
         public NCharacter Info { get; set; } = new NCharacter();
 

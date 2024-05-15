@@ -19,7 +19,7 @@ namespace GameServer.Model
 
         public SpaceDefine Def { get; set; }
 
-        // 当前场景中全部的角色
+        // 当前场景中全部的角色 <角色ID， 角色对象>
         public Dictionary<int, Character> CharacterDict = new Dictionary<int, Character>();
 
         // 记录连接对应的角色
@@ -36,12 +36,11 @@ namespace GameServer.Model
 
         public void CharacterJoin(Connection conn, Character character)
         {
-            Log.Information("角色进入场景：" + character.entityId);
+            Log.Information("角色进入场景：" + character.Id);
             conn.Set<Character>(character);   // 把角色character存入对应的conn连接当中
-            conn.Set<Space>(this);            // 把场景 space 存入对应的 conn 连接当中
-            character.SpaceId = this.Id;    
+            character.Space = this;    
 
-            CharacterDict[character.entityId] = character;
+            CharacterDict[character.Id] = character;
             character.conn = conn; // 设置这个角色所对应的客户端连接
             if(ConnCharater.ContainsKey(conn))
             {
@@ -81,9 +80,8 @@ namespace GameServer.Model
         // 角色离开地图 (客户端断开连接、去其它场景)
         public void CharacterLeave(Connection conn, Character character) 
         {
-            Log.Information("角色离开场景：" + character.entityId);
-            conn.Set<Character>(null);  // 取消该连接的当前场景记录
-            CharacterDict.Remove(character.entityId);  // 将 该连接 从 当前场景中的CharacterDict 中移除
+            Log.Information("角色离开场景：" + character.Id);
+            CharacterDict.Remove(character.Id);  // 将 该连接 从 当前场景中的CharacterDict 中移除
 
             // 通知其它客户端，该客户端已离开该场景
             SpaceCharaterLeaveResponse resp = new SpaceCharaterLeaveResponse();
@@ -104,6 +102,12 @@ namespace GameServer.Model
                 {
                     // 把传进来的 Entity 的状态 赋值给 服务器对象Entity当中
                     kv.Value.SetEntityData(entitySync.Entity);
+                    var myCharacter = kv.Value; // 自己的角色
+
+                    // 记录当前自己的角色的位置信息, 以便于让  Character 对象中的 Save 更新给数据库
+                    myCharacter.Data.X = entitySync.Entity.Position.X;
+                    myCharacter.Data.Y = entitySync.Entity.Position.Y;
+                    myCharacter.Data.Z = entitySync.Entity.Position.Z;
                 }
                 else  //其他人
                 {

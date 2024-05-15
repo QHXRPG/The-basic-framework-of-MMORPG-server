@@ -19,7 +19,7 @@ namespace GameServer.Model
         public int SpaceId
         {
             get { return spaceId; }
-            set { spaceId = value; }    
+            set { spaceId = value; }
         }
 
         public int entityId { get { return _entityId; } }

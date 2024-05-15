@@ -31,12 +31,13 @@ namespace GameServer.Service
         public Space GetSpace(int spaceId)
         { return SpaceManager.Instance.GetSpace(spaceId); }
 
+        // 场景实体的同步请求
         private void _SpaceEntitySyncRequest(Connection conn, SpaceEntitySyncRequest msg)
         {
             // 通过conn拿到角色所在的地图
-            var sp = conn.Get<Space>();
-            if (sp == null) return;
-            sp.UpdataEntity(msg.EntitySync);
+            var Space = conn.Get<Character>()?.Space;
+            if (Space == null) return;
+            Space.UpdataEntity(msg.EntitySync);
         }
     }
 }
