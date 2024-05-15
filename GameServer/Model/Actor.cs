@@ -30,10 +30,11 @@ namespace GameServer.Model
 
         public NCharacter Info { get; set; } = new NCharacter();
 
-        public Actor(int id, Vector3Int position, Vector3Int direction)
-            : base(id, position, direction)
+        public Actor(Vector3Int position, Vector3Int direction)
+            : base(position, direction)
         {
             
         }
+
     }
 }

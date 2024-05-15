@@ -27,7 +27,7 @@ namespace GameServer.Model
         // 当前角色对应的数据库对象
         public DbCharacter Data = new DbCharacter();
 
-        public Character(int entityId, Vector3Int position, Vector3Int direction) : base(entityId, position, direction)
+        public Character(Vector3Int position, Vector3Int direction) : base(position, direction)
         {
 
         }
@@ -36,11 +36,8 @@ namespace GameServer.Model
         // Character 类型隐式转换 dbCharacter
         public static implicit operator Character(DbCharacter dbCharacter)
         {
-            // 申请实体
-            int entityId = EntityManager.Instance.NewEntityId;
-
             // 把数据库角色 转换为 游戏对象
-            Character character = new Character(entityId, new Vector3Int(dbCharacter.X, dbCharacter.Y, dbCharacter.Z), Vector3Int.zero);
+            Character character = new Character(new Vector3Int(dbCharacter.X, dbCharacter.Y, dbCharacter.Z), Vector3Int.zero);
             character.Id = dbCharacter.Id;
             character.Name = dbCharacter.Name;
             character.Info.Name = dbCharacter.Name;

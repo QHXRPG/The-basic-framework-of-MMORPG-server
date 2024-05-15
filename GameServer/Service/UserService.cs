@@ -168,7 +168,7 @@ namespace Common.Network.Server
                 Mp = 100,
                 Level = 1,
                 Exp = 0,
-                SpaceId = 6,
+                SpaceId = 1,
                 Gold = 0,
                 PlayerId = player.Id,
             };
@@ -225,7 +225,7 @@ namespace Common.Network.Server
             //通知玩家登录成功
             GameEnterResponse response = new GameEnterResponse();
             response.Success = true;
-            response.Entity = character.GetData();
+            response.Entity = character.EntityData;
             response.Charater = character.Info;  // 把创建好的角色传给客户端
             conn.Send(response);
 

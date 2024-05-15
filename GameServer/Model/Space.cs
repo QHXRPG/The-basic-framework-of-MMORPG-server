@@ -50,7 +50,7 @@ namespace GameServer.Model
             NEntity e = new NEntity();
             var resp = new SpaceCharaterEnterResponse();
             resp.SpaceId = this.Id;  // 当前场景的id
-            resp.EntityList.Add(character.GetData()); //把 NEntity 对象加入到 NEntity 列表中
+            resp.EntityList.Add(character.EntityData); //把 NEntity 对象加入到 Entity 列表中
             foreach(var kv in CharacterDict) 
             {
                 // 发送角色进入场景的消息给其他人
@@ -70,7 +70,7 @@ namespace GameServer.Model
 
                 // 清空再添加，再清空再添加
                 resp.EntityList.Clear();                  
-                resp.EntityList.Add(kv.Value.GetData());
+                resp.EntityList.Add(kv.Value.EntityData);
 
                 // 把所有角色挨个发出去, 当前的客户端接收后更新场景中其他人的位置
                 conn.Send(resp);    
@@ -101,7 +101,7 @@ namespace GameServer.Model
                 if (kv.Value.entityId == entitySync.Entity.Id) // 自己
                 {
                     // 把传进来的 Entity 的状态 赋值给 服务器对象Entity当中
-                    kv.Value.SetEntityData(entitySync.Entity);
+                    kv.Value.EntityData = entitySync.Entity;
                     var myCharacter = kv.Value; // 自己的角色
 
                     // 记录当前自己的角色的位置信息, 以便于让  Character 对象中的 Save 更新给数据库

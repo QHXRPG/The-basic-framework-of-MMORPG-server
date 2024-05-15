@@ -37,12 +37,20 @@ namespace GameServer.Mgr
         {
             Character character = dbCharacter;
             Characters[dbCharacter.Id] = character;
+
+            // 把这个 Character 添加到 AllEntities
+            EntityManager.Instance.AddEntity(dbCharacter.SpaceId, character);
+
             return character;   
         }
 
         public void RemoveCharacter(int CharacterId)
         {
-            Characters.TryRemove(CharacterId, out Character character);
+            Character character;
+            if(Characters.TryRemove(CharacterId, out character))
+            {
+                EntityManager.Instance.RemoveEntity(character.Data.SpaceId, character);
+            }
         }
 
         public Character GetCharacter(int CharacterId) 

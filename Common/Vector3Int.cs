@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Proto.Message;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -431,13 +432,25 @@ namespace Summer
             return !(lhs == rhs);
         }
 
+        public static implicit operator Vector3Int(NVector3 v)
+        {
+            return new Vector3Int() { x = v.X, y = v.Y, z = v.Z };
+        }
+
+        public static implicit operator NVector3(Vector3Int v)
+        {
+            return new NVector3() { X = v.x, Y = v.y, Z = v.z };
+        }
+
+
+
         //
         // 摘要:
         //     Returns true if the objects are equal.
         //
         // 参数:
         //   other:
-        
+
         public override bool Equals(object other)
         {
             if (!(other is Vector3Int))
