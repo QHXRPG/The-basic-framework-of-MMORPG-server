@@ -11,6 +11,7 @@ namespace GameServer.Model
     // 在MMO世界当中同步的实体
     public class Entity
     {
+        private int speed;  // 移动速度
         private Vector3Int position;  // 位置
         private Vector3Int direction; //方向
         private int spaceId; // 所在地图ID 
@@ -40,6 +41,19 @@ namespace GameServer.Model
             { 
                 direction = value;
                 netObj.Direction = value;
+            }
+        }
+
+        public int Speed
+        {
+            get
+            {
+                return speed;
+            }
+            set
+            {
+                speed = value;
+                netObj.Speed = value;
             }
         }
 

@@ -16,14 +16,12 @@ namespace GameServer.Model
             Actor可以包括玩家角色、NPC（非玩家角色）、敌人、道具、特效等各种实体。
             Actor通常具有共性的行为和属性，比如位置、生命周期、碰撞等。
             Actor可以是游戏中的任何实体，不一定具有角色的特征。
- */
+    */
     public class Actor : Entity
     {
         public int Id{get; set; }
 
         public string Name { get; set; }
-
-        public int Speed {  get; set; }
 
         // 当前Actor所在的场景
         public Space Space { get; set; }

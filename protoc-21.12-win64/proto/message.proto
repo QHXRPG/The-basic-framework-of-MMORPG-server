@@ -28,6 +28,7 @@ message NEntity{
     int32 id = 1;
     NVector3 position = 3;
     NVector3 direction = 4;
+    int32 Speed = 5;
 }
 
 // 同步消息
@@ -42,7 +43,6 @@ message SpaceEntitySyncRequest{
 
 message SpaceEntitySyncResponse{
     NEntitySync entitySync = 1;
-    NCharacter Character = 2;
 }
 
 message GameEnterRequest{
