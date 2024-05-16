@@ -42,6 +42,7 @@ message SpaceEntitySyncRequest{
 
 message SpaceEntitySyncResponse{
     NEntitySync entitySync = 1;
+    NCharacter Character = 2;
 }
 
 message GameEnterRequest{
@@ -57,7 +58,7 @@ message GameEnterResponse{
 
 message SpaceCharaterEnterResponse{
     int32 spaceId = 1;
-    repeated NEntity entityList = 2;
+    repeated NCharacter characterList = 2;
 }
 
 message SpaceCharaterLeaveResponse{

@@ -61,7 +61,7 @@ namespace GameServer.Network
         private void _HeartBeatRequest(Connection conn, HeartBeatRequest msg)
         {
             heartBeatPairs[conn] = DateTime.Now; //记录心跳时间
-            Log.Information("收到心跳包:" + conn);
+           // Log.Information("收到心跳包:" + conn);
             HeartBeatResponse resp = new HeartBeatResponse();
             conn.Send(resp);
         }

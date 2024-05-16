@@ -36,7 +36,7 @@ namespace GameServer.Model
 
         public void CharacterJoin(Connection conn, Character character)
         {
-            Log.Information("角色进入场景：" + character.Id);
+            Log.Information($"角色 {character.Id} 进入场景：{character.SpaceId}" );
             conn.Set<Character>(character);   // 把角色character存入对应的conn连接当中
             character.Space = this;    
 
@@ -50,7 +50,11 @@ namespace GameServer.Model
             NEntity e = new NEntity();
             var resp = new SpaceCharaterEnterResponse();
             resp.SpaceId = this.Id;  // 当前场景的id
-            resp.EntityList.Add(character.EntityData); //把 NEntity 对象加入到 Entity 列表中
+            character.Info.Entity = character.EntityData;
+
+             //把 NEntity 对象加入到 Entity 列表中
+            resp.CharacterList.Add(character.Info);
+
             foreach(var kv in CharacterDict) 
             {
                 // 发送角色进入场景的消息给其他人
@@ -69,8 +73,8 @@ namespace GameServer.Model
                     continue;
 
                 // 清空再添加，再清空再添加
-                resp.EntityList.Clear();                  
-                resp.EntityList.Add(kv.Value.EntityData);
+                resp.CharacterList.Clear();                  
+                resp.CharacterList.Add(kv.Value.Info);
 
                 // 把所有角色挨个发出去, 当前的客户端接收后更新场景中其他人的位置
                 conn.Send(resp);    
