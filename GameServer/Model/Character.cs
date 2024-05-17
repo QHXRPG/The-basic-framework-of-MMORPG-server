@@ -50,6 +50,7 @@ namespace GameServer.Model
             character.Info.Hp = dbCharacter.Hp;
             character.Info.Mp = dbCharacter.Mp;
             character.Data = dbCharacter;
+            character.Speed = 4000;
             return character;
         }
 

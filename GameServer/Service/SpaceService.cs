@@ -37,6 +37,32 @@ namespace GameServer.Service
             // 通过conn拿到角色所在的地图
             var Space = conn.Get<Character>()?.Space;
             if (Space == null) return;
+
+            NEntity netEntity = msg.EntitySync.Entity;
+            Entity serEntity = EntityManager.Instance.GetEntity(netEntity.Id);
+            float dist = Vector3Int.Distance(netEntity.Position, serEntity.Position);
+            
+            // 使用服务器速度
+            netEntity.Speed = serEntity.Speed;
+
+            // 计算时间差
+            float dt = Math.Min(serEntity.PositionTime, 1.0f);
+
+            // 计算限额
+            float limit = serEntity.Speed * dt * 2 *1.5f;
+            if (dist > limit)
+            { 
+                // 把角色拉回原位
+                SpaceEntitySyncResponse resp = new SpaceEntitySyncResponse();
+                resp.EntitySync = new NEntitySync();
+                resp.EntitySync.Entity = serEntity.EntityData;  // 采用服务器这边的数据
+                resp.EntitySync.Force = true;
+                conn.Send(resp);
+                return;
+            }
+
+
+            // 广播同步信息
             Space.UpdataEntity(msg.EntitySync);
         }
     }

@@ -16,6 +16,7 @@ namespace GameServer.Model
         private Vector3Int direction; //方向
         private int spaceId; // 所在地图ID 
         private NEntity netObj;  // 网络对象
+        private long _lastUpdate; // 最后一次更新时间戳
 
         public int SpaceId
         {
@@ -32,6 +33,7 @@ namespace GameServer.Model
             { 
                 position = value;
                 netObj.Position = value;
+                _lastUpdate = DateTimeOffset.Now.ToUnixTimeMilliseconds();  // 更新时间戳
             }
         }
 
@@ -58,6 +60,16 @@ namespace GameServer.Model
         }
 
 
+        // 距离上一次位置更新的时间间隔()
+        public float PositionTime
+        {
+            get
+            {
+                return (DateTimeOffset.Now.ToUnixTimeMilliseconds() - _lastUpdate) * 0.001f;
+            }
+        }
+
+
         public Entity(Vector3Int pos, Vector3Int dir)
         {
             netObj = new NEntity();
@@ -72,8 +84,9 @@ namespace GameServer.Model
             set
             {
                 netObj = value;
-                position = netObj.Position;
-                direction = netObj.Direction;
+                Position = netObj.Position;
+                Direction = netObj.Direction;
+                Speed = netObj.Speed;
             }
         }
     }
