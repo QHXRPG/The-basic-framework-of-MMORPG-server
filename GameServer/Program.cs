@@ -13,6 +13,8 @@ using GameServer.Service;
 using GameServer.Database;
 using System.Numerics;
 using Summer;
+using GameServer.Model;
+using GameServer.Mgr;
 
 
 namespace GameServer
@@ -50,6 +52,9 @@ namespace GameServer
             // 中心计时器
             Schedule.Instance.Start();
             Log.Debug("中心计时器启动");
+
+            Space space = SpaceManager.Instance.GetSpace(2);
+            Monster monster = space.monsterManager.Create(1002, 3, new Vector3Int(773217, 9562, 146690), Vector3Int.zero);
 
             // 用户登录消息
             MessageRouter.Instance.Subscribe<UserLoginRequest>(OnUserLoginRequest);

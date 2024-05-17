@@ -8,6 +8,7 @@ using Summer;
 using Serilog;
 using Proto;
 using Proto.Message;
+using GameServer.Mgr;
 
 namespace GameServer.Model
 {
@@ -22,25 +23,29 @@ namespace GameServer.Model
         // 当前场景中全部的角色 <角色ID， 角色对象>
         public Dictionary<int, Character> CharacterDict = new Dictionary<int, Character>();
 
+        // 当前场景中的怪物 <MonsterId, Monster>
+        public Dictionary<int, Monster> MonsterDict = new Dictionary<int, Monster>();
+
         // 记录连接对应的角色
         private Dictionary<Connection, Character> ConnCharater = new Dictionary<Connection, Character>();
 
-        public Space() { }
+        public MonsterManager monsterManager = new MonsterManager();
 
         public Space(SpaceDefine def)
         {
             this.Def = def;
             this.Id = def.SID;
             this.Name = def.Name;   
+            monsterManager.Init(this);
         }
 
         public void CharacterJoin(Connection conn, Character character)
         {
             Log.Information($"角色 {character.Id} 进入场景：{character.SpaceId}" );
             conn.Set<Character>(character);   // 把角色character存入对应的conn连接当中
-            character.Space = this;    
+            character.OnEnterSpace(this);
 
-            CharacterDict[character.Id] = character;
+           CharacterDict[character.Id] = character;
             character.conn = conn; // 设置这个角色所对应的客户端连接
             if(ConnCharater.ContainsKey(conn))
             {
@@ -66,7 +71,7 @@ namespace GameServer.Model
                 }
             }
 
-            // 新上线的角色需要获取全部角色的信息
+            // 同步其它玩家
             foreach (var kv in CharacterDict)
             {
                 if (kv.Value.conn == conn) // 当前客户端不需要接收自己的角色信息
@@ -78,6 +83,17 @@ namespace GameServer.Model
 
                 // 把所有角色挨个发出去, 当前的客户端接收后更新场景中其他人的位置
                 conn.Send(resp);    
+            }
+
+            // 同步怪物
+            foreach (var kv in MonsterDict)
+            {
+                // 清空再添加，再清空再添加
+                resp.CharacterList.Clear();
+                resp.CharacterList.Add(kv.Value.Info);
+
+                // 把所有角色挨个发出去, 当前的客户端接收后更新场景中其他人的位置
+                conn.Send(resp);
             }
         }
 
@@ -119,6 +135,20 @@ namespace GameServer.Model
                     resp.EntitySync = entitySync;
                     kv.Value.conn.Send(resp);
                 }
+            }
+        }
+
+        // 怪物进入场景
+        public void MonsterEnter(Monster monster)
+        {
+            MonsterDict.Add(monster.Id, monster);
+            monster.OnEnterSpace(this);
+            var resp = new SpaceCharaterEnterResponse();
+            resp.SpaceId = this.Id;
+            resp.CharacterList.Add(monster.Info);
+            foreach (var kv in CharacterDict) 
+            {
+                kv.Value.conn.Send(resp);
             }
         }
     }

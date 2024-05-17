@@ -83,10 +83,9 @@ namespace GameServer.Model
             get { return netObj; }
             set
             {
-                netObj = value;
-                Position = netObj.Position;
-                Direction = netObj.Direction;
-                Speed = netObj.Speed;
+                Position = value.Position;
+                Direction = value.Direction;
+                Speed = value.Speed;
             }
         }
     }

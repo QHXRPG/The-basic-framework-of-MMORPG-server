@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Summer;
 using GameServer.Mgr;
 using Proto.Message;
+using System.Threading;
 
 namespace GameServer.Model
 {
@@ -19,20 +20,35 @@ namespace GameServer.Model
     */
     public class Actor : Entity
     {
-        public int Id{get; set; }
+        public int Id{ get { return Info.Id; } set { Info.Id = value; } }
 
-        public string Name { get; set; }
+        public string Name { get { return Info.Name; } set { Info.Name = value; } }
 
         // 当前Actor所在的场景
         public Space Space { get; set; }
 
         public NCharacter Info { get; set; } = new NCharacter();
 
-        public Actor(Vector3Int position, Vector3Int direction)
+        public EntityType Type { get { return Info.EntityType; } set { Info.EntityType = value; } }
+
+        public UnitDefine Define { get; set; }
+
+        public Actor(EntityType entityType, int TID, int level, Vector3Int position, Vector3Int direction)
             : base(position, direction)
-        {
-            
+        {   
+            this.Define = DataManager.Instance.Units[TID];
+            this.Info.Name = Define.Name;
+            this.Info.Tid = TID;
+            this.Info.Level = level;
+            this.Info.EntityType = entityType;    // 实体类型
+            this.Info.Entity = this.EntityData; 
+            this.Speed = Define.Speed;
         }
 
+        public void OnEnterSpace(Space space)
+        {
+            this.Space = space;
+            this.Info.SpaceId = space.Id;
+        }
     }
 }

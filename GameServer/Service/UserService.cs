@@ -98,7 +98,7 @@ namespace Common.Network.Server
                 characterListResponse.CharacterList.Add(new NCharacter()
                 {
                     Id = item.Id,
-                    TypeId = item.JobId,
+                    Tid = item.JobId,
                     Name = item.Name,
                     Level = item.Level,
                     Exp = item.Exp,
@@ -233,5 +233,7 @@ namespace Common.Network.Server
             var space = SpaceService.Instance.GetSpace(DbCharacter.SpaceId);  
             space.CharacterJoin(conn, character); //地图广播
         }
+
+
     }
 }

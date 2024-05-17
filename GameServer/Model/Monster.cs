@@ -1,4 +1,6 @@
-﻿using Summer;
+﻿using GameServer.Database;
+using Proto.Message;
+using Summer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace GameServer.Model
 {
-    internal class Monster : Actor
+    public class Monster : Actor
     {
-        public Monster(Vector3Int position, Vector3Int direction) : base(position, direction)
+        public Monster(int tid, int level, Vector3Int pos, Vector3Int dir)
+            : base(EntityType.Monster, tid, level, pos, dir)
         {
         }
     }

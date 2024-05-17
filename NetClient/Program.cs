@@ -23,16 +23,6 @@ socket.Connect(iPEndPoint);
 
 Log.Information("成功连接到服务器");
 
-//用户登录消息 压力测试
-/*for (int i = 0; i < 100000; i++)
-{
-    MyConnection conn = new MyConnection(socket);
-    conn.Request.UserLogin = new UserLoginRequest();
-    conn.Request.UserLogin.Username = "QHXRPG-" + i;
-    conn.Request.UserLogin.Password = "pwd-" + i;
-    conn.Send();
-}*/
-
 Connection conn = new Connection(socket);
 
 var msg = new UserLoginRequest();

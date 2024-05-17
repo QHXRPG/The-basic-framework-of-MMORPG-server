@@ -1,11 +1,12 @@
-﻿using Proto.Message;
+﻿using Proto;
+using Proto.Message;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Summer
+namespace GameServer
 {
     //
     // 摘要:
@@ -434,15 +435,12 @@ namespace Summer
 
         public static implicit operator Vector3Int(NVector3 v)
         {
-            return new Vector3Int() { x = v.X, y = v.Y, z = v.Z };
+            return new Vector3Int() { x=v.X, y=v.Y, z=v.Z };
         }
-
         public static implicit operator NVector3(Vector3Int v)
         {
-            return new NVector3() { X = v.x, Y = v.y, Z = v.z };
+            return new NVector3() { X=v.x, Y=v.y, Z=v.z };
         }
-
-
 
         //
         // 摘要:

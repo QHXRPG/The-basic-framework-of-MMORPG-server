@@ -27,31 +27,34 @@ namespace GameServer.Model
         // 当前角色对应的数据库对象
         public DbCharacter Data = new DbCharacter();
 
-        public Character(Vector3Int position, Vector3Int direction) : base(position, direction)
+        //public Character(Vector3Int position, Vector3Int direction) : base(position, direction)
+        //{
+
+        //}
+
+        public Character(DbCharacter dbCharacter) 
+            : base(EntityType.Character, dbCharacter.JobId, dbCharacter.Level,
+                  new Vector3Int(dbCharacter.X, dbCharacter.Y, dbCharacter.Z), Vector3Int.zero)
         {
-
+            UnitDefine unitDefine = DataManager.Instance.Units[dbCharacter.JobId];
+            this.Id = dbCharacter.Id;
+            this.Name = dbCharacter.Name;
+            this.Info.Name = dbCharacter.Name;
+            this.Info.Id = dbCharacter.Id;        // 主键
+            this.Info.Tid = dbCharacter.JobId;   // 角色类型
+            this.Info.Exp = dbCharacter.Exp;
+            this.Info.SpaceId = dbCharacter.SpaceId;
+            this.Info.Gold = dbCharacter.Gold;
+            this.Info.Hp = dbCharacter.Hp;
+            this.Info.Mp = dbCharacter.Mp;
+            this.Data = dbCharacter;
+            this.Speed = unitDefine.Speed;
         }
-
 
         // Character 类型隐式转换 dbCharacter
         public static implicit operator Character(DbCharacter dbCharacter)
         {
-            // 把数据库角色 转换为 游戏对象
-            Character character = new Character(new Vector3Int(dbCharacter.X, dbCharacter.Y, dbCharacter.Z), Vector3Int.zero);
-            character.Id = dbCharacter.Id;
-            character.Name = dbCharacter.Name;
-            character.Info.Name = dbCharacter.Name;
-            character.Info.Id = dbCharacter.Id;        // 主键
-            character.Info.TypeId = dbCharacter.JobId;   // 角色类型
-            character.Info.Level = dbCharacter.Level;
-            character.Info.Exp = dbCharacter.Exp;
-            character.Info.SpaceId = dbCharacter.SpaceId;
-            character.Info.Gold = dbCharacter.Gold;
-            character.Info.Hp = dbCharacter.Hp;
-            character.Info.Mp = dbCharacter.Mp;
-            character.Data = dbCharacter;
-            character.Speed = 4000;
-            return character;
+            return new Character(dbCharacter);
         }
 
     }

@@ -16,6 +16,16 @@ message NVector3{
     int32 z = 3;
 }
 
+
+enum EntityType
+{
+    Character = 0;
+    Monster = 1;
+    NPC = 2;
+}
+
+
+
 enum EntityState{
     NONE = 0;
     IDLE = 1;
@@ -109,7 +119,7 @@ message CharacterCreateRequest{
 
 message NCharacter{
     int32 id = 1;
-    int32 type_id = 2;
+    int32 tid = 2;  // 单位类型
     int32 entity_id = 3;
     string name = 4;
     int32 level = 5;
@@ -119,6 +129,7 @@ message NCharacter{
     NEntity entity = 9;
     int32 hp = 10;
     int32 mp = 11;
+    EntityType entityType = 12;
 }
 
 message CharacterCreateResponse{

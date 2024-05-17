@@ -35,7 +35,7 @@ namespace GameServer.Mgr
         // 通过数据库对象创建一个角色对象
         public Character CreateCharacter(DbCharacter dbCharacter)
         {
-            Character character = dbCharacter;
+            Character character = new Character(dbCharacter);
             Characters[dbCharacter.Id] = character;
 
             // 把这个 Character 添加到 AllEntities

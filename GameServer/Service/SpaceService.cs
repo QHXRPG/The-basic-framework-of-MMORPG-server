@@ -50,7 +50,7 @@ namespace GameServer.Service
 
             // 计算限额
             float limit = serEntity.Speed * dt * 2 *1.5f;
-            if (dist > limit)
+            if (float.IsNaN(dist) || dist> limit)
             { 
                 // 把角色拉回原位
                 SpaceEntitySyncResponse resp = new SpaceEntitySyncResponse();
