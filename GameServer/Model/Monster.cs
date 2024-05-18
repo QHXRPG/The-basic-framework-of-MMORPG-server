@@ -28,6 +28,16 @@ namespace GameServer.Model
                 float z = pos.z + (rand.NextSingle() * 10f - 5f) * 1000;
                 MoveTo(new Vector3(x, 0, z));
             },15);
+
+            Schedule.Instance.AddTask(() =>
+            {
+                if(State != EntityState.Move) return;
+                // 广播消息
+                NEntitySync nEntitySync = new NEntitySync();
+                nEntitySync.Entity = EntityData;
+                nEntitySync.State = State;
+                this.Space.UpdateEntity(nEntitySync); // 让当前的地图进行广播
+            }, 0.15f);
             
         }
 
@@ -51,6 +61,16 @@ namespace GameServer.Model
             }
         }
 
+        public void StopMove()
+        {
+            State = EntityState.Idle;
+            movePosition = moveTaraget;
+            // 广播消息
+            NEntitySync nEntitySync = new NEntitySync();
+            nEntitySync.Entity = EntityData;
+            nEntitySync.State = State;
+            this.Space.UpdateEntity(nEntitySync); // 让当前的地图进行广播
+        }
 
         public override void Update()
         {
@@ -62,20 +82,13 @@ namespace GameServer.Model
                 float dist = Speed * Time.deltaTime;
                 if(Vector3.Distance(moveTaraget, movePosition) < dist)
                 {
-                    State = EntityState.Idle;
-                    movePosition = moveTaraget;
+                    StopMove();
                 }
                 else
                 {
                     movePosition += dist * dir;
                 }
                 this.Position = movePosition;
-
-                // 广播消息
-                NEntitySync nEntitySync = new NEntitySync();
-                nEntitySync.Entity = EntityData;
-                nEntitySync.State = State;
-                this.Space.UpdateEntity(nEntitySync); // 让当前的地图进行广播
             }
         }
 
