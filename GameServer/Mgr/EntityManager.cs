@@ -64,5 +64,13 @@ namespace GameServer.Mgr
         }
 
         public EntityManager() { }
+
+        public void Update()
+        {
+            foreach(var entity in AllEntities) 
+            {
+                entity.Value.Update();
+            }
+        }
     }
 }

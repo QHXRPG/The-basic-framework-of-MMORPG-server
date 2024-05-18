@@ -88,5 +88,10 @@ namespace GameServer.Model
                 Speed = value.Speed;
             }
         }
+
+        public virtual void Update()
+        {
+
+        }
     }
 }

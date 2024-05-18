@@ -71,30 +71,21 @@ namespace GameServer.Model
                 }
             }
 
+            resp.CharacterList.Clear();
             // 同步其它玩家
             foreach (var kv in CharacterDict)
             {
                 if (kv.Value.conn == conn) // 当前客户端不需要接收自己的角色信息
                     continue;
-
-                // 清空再添加，再清空再添加
-                resp.CharacterList.Clear();                  
                 resp.CharacterList.Add(kv.Value.Info);
-
-                // 把所有角色挨个发出去, 当前的客户端接收后更新场景中其他人的位置
-                conn.Send(resp);    
             }
 
             // 同步怪物
             foreach (var kv in MonsterDict)
             {
-                // 清空再添加，再清空再添加
-                resp.CharacterList.Clear();
                 resp.CharacterList.Add(kv.Value.Info);
-
-                // 把所有角色挨个发出去, 当前的客户端接收后更新场景中其他人的位置
-                conn.Send(resp);
             }
+            conn.Send(resp);
         }
 
         // 角色离开地图 (客户端断开连接、去其它场景)
@@ -113,7 +104,7 @@ namespace GameServer.Model
         }
 
         // 广播更新Entity的信息
-        public void UpdataEntity(NEntitySync entitySync)
+        public void UpdateEntity(NEntitySync entitySync)
         {
             // 广播自己的位置给其他人，不需要广播给自己，因为自己的客户端能够看到
             foreach (var kv in CharacterDict)

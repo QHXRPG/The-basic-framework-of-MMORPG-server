@@ -54,10 +54,16 @@ namespace GameServer
             Log.Debug("中心计时器启动");
 
             Space space = SpaceManager.Instance.GetSpace(2);
-            Monster monster = space.monsterManager.Create(1002, 3, new Vector3Int(773217, 9562, 146690), Vector3Int.zero);
+            Monster monster = space.monsterManager.Create(1002, 3, 
+                new Vector3Int(773217, 0, 146690), Vector3Int.zero);
 
             // 用户登录消息
             MessageRouter.Instance.Subscribe<UserLoginRequest>(OnUserLoginRequest);
+
+            Schedule.Instance.AddTask(() =>
+            {
+                EntityManager.Instance.Update();
+            }, 0.02f);
 
 
             while (true)

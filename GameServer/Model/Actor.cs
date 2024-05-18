@@ -32,6 +32,7 @@ namespace GameServer.Model
         public EntityType Type { get { return Info.EntityType; } set { Info.EntityType = value; } }
 
         public UnitDefine Define { get; set; }
+        public EntityState State;
 
         public Actor(EntityType entityType, int TID, int level, Vector3Int position, Vector3Int direction)
             : base(position, direction)

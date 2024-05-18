@@ -441,6 +441,14 @@ namespace GameServer
         {
             return new NVector3() { X=v.x, Y=v.y, Z=v.z };
         }
+        public static implicit operator Vector3(Vector3Int v)
+        {
+            return new Vector3() { x = v.x, y = v.y, z = v.z };
+        }
+        public static implicit operator Vector3Int(Vector3 v)
+        {
+            return new Vector3Int() { x = (int)v.x, y = (int)v.y, z = (int)v.z };
+        }
 
         //
         // 摘要:
