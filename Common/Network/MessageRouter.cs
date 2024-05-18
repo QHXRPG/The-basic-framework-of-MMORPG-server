@@ -134,7 +134,7 @@ namespace Summer.Network
             Log.Information("MessageWorker thread start");
             try
             {
-                WorkerCount = Interlocked.Increment(ref WorkerCount);  // 原子性 线程安全 地 +1
+                Interlocked.Increment(ref WorkerCount);  // 原子性 线程安全 地 +1
 
                 // 工作
                 while (_running)
@@ -164,7 +164,7 @@ namespace Summer.Network
             }
             finally
             {
-                WorkerCount = Interlocked.Decrement(ref WorkerCount);  // 原子性 线程安全 地 -1
+                Interlocked.Decrement(ref WorkerCount);  // 原子性 线程安全 地 -1
             }
             Log.Information("MessageWorker thread end");
         }

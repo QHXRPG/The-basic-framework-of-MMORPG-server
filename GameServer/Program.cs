@@ -15,6 +15,7 @@ using System.Numerics;
 using Summer;
 using GameServer.Model;
 using GameServer.Mgr;
+using GameServer.AI;
 
 
 namespace GameServer
@@ -56,6 +57,9 @@ namespace GameServer
             Space space = SpaceManager.Instance.GetSpace(2);
             Monster monster = space.monsterManager.Create(1002, 3, 
                 new Vector3Int(773217, 0, 146690), Vector3Int.zero);
+            monster.AI = new MonsterAI(monster);
+
+
 
             // 用户登录消息
             MessageRouter.Instance.Subscribe<UserLoginRequest>(OnUserLoginRequest);

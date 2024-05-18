@@ -1,4 +1,5 @@
-﻿using GameServer.Database;
+﻿using GameServer.AI;
+using GameServer.Database;
 using Proto.Message;
 using Summer;
 using System;
@@ -11,9 +12,12 @@ namespace GameServer.Model
 {
     public class Monster : Actor
     {
+        public AIBase AI;
         public Vector3 moveTaraget;  // 移动的目标
         public Vector3 movePosition; // 当前移动的位置
-        public Vector3 initPosition;
+        public Vector3 initPosition; // 出生点
+
+        Random rand = new Random(); 
 
         public Monster(int tid, int level, Vector3Int pos, Vector3Int dir)
             : base(EntityType.Monster, tid, level, pos, dir)
@@ -22,12 +26,13 @@ namespace GameServer.Model
             Speed = 4000;
             State = EntityState.Idle;
             Random rand = new Random();
-            Schedule.Instance.AddTask(() =>
-            {
-                float x = pos.x + (rand.NextSingle() * 10f - 5f) * 1000;
-                float z = pos.z + (rand.NextSingle() * 10f - 5f) * 1000;
-                MoveTo(new Vector3(x, 0, z));
-            },15);
+
+            //Schedule.Instance.AddTask(() =>
+            //{
+            //    float x = pos.x + (rand.NextSingle() * 10f - 5f) * 1000;
+            //    float z = pos.z + (rand.NextSingle() * 10f - 5f) * 1000;
+            //    MoveTo(new Vector3(x, 0, z));
+            //},15);
 
             Schedule.Instance.AddTask(() =>
             {
@@ -38,6 +43,8 @@ namespace GameServer.Model
                 nEntitySync.State = State;
                 this.Space.UpdateEntity(nEntitySync); // 让当前的地图进行广播
             }, 0.15f);
+
+
             
         }
 
@@ -74,6 +81,7 @@ namespace GameServer.Model
 
         public override void Update()
         {
+            AI?.Update();
             if(State == EntityState.Move)
             {
                 // 移动的方向
@@ -107,6 +115,15 @@ namespace GameServer.Model
             //AngleZ = 0
             eulerAngles.z = 0;
             return eulerAngles;
+        }
+
+        // 计算出生点附近的随机坐标
+        public Vector3 RandomPointWithBirth(float range)
+        {
+            float x = rand.NextSingle() * 2f - 1f;
+            float z = rand.NextSingle() * 2f - 1f;
+            Vector3 dir = new Vector3(x, 0, z).normalized;
+            return initPosition + dir * range * rand.NextSingle();
         }
 
     }

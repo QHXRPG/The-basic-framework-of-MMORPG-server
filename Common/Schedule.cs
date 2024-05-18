@@ -212,6 +212,11 @@ namespace Summer
 
     public class Time
     {
+        // 记录游戏的开始时间
+        private static long startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+
+        // 游戏运行时间（秒）
+        public static float time { get; private set; }
         /// <summary>
         /// 获取上一帧运行所用的时间
         /// </summary>
@@ -226,7 +231,7 @@ namespace Summer
         public static void Tick()
         {
             long now = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-
+            time = (now - startTime) * 0.001f;
             if (lastTick == 0) lastTick = now;
             deltaTime = (now - lastTick) * 0.001f;
             lastTick = now;
