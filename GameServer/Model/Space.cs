@@ -109,22 +109,22 @@ namespace GameServer.Model
             // 广播自己的位置给其他人，不需要广播给自己，因为自己的客户端能够看到
             foreach (var kv in CharacterDict)
             {
-                if (kv.Value.entityId == entitySync.Entity.Id) // 自己
+                if (kv.Value.entityId == entitySync.Entity.Id) // 遍历到的客户端恰好是发送同步请求的客户端
                 {
                     // 把传进来的 Entity 的状态 赋值给 服务器对象Entity当中
                     kv.Value.EntityData = entitySync.Entity;
-                    var myCharacter = kv.Value; // 自己的角色
+                    var myCharacter = kv.Value;  // 客户端自己的角色
 
-                    // 记录当前自己的角色的位置信息, 以便于让  Character 对象中的 Save 更新给数据库
+                    // 记录当前客户端自己的角色的位置信息, 以便于让  Character 对象中的 Save 更新给数据库
                     myCharacter.Data.X = entitySync.Entity.Position.X;
                     myCharacter.Data.Y = entitySync.Entity.Position.Y;
                     myCharacter.Data.Z = entitySync.Entity.Position.Z;
                 }
                 else  //其他人
                 {
-                    SpaceEntitySyncResponse resp = new SpaceEntitySyncResponse();   
+                    SpaceEntitySyncResponse resp = new SpaceEntitySyncResponse();
                     resp.EntitySync = entitySync;
-                    kv.Value.conn.Send(resp);
+                    kv.Value.conn.Send(resp); 
                 }
             }
         }

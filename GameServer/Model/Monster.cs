@@ -13,9 +13,12 @@ namespace GameServer.Model
     public class Monster : Actor
     {
         public AIBase AI;
+        public Actor target;  // 目标
         public Vector3 moveTaraget;  // 移动的目标
         public Vector3 movePosition; // 当前移动的位置
         public Vector3 initPosition; // 出生点
+        public static Vector3Int Y1000 = new Vector3Int(0, 1, 0);
+        public static Vector3Int XZ1000 = new Vector3Int(1, 0, 1);
 
         Random rand = new Random(); 
 
@@ -43,8 +46,6 @@ namespace GameServer.Model
                 nEntitySync.State = State;
                 this.Space.UpdateEntity(nEntitySync); // 让当前的地图进行广播
             }, 0.15f);
-
-
             
         }
 
@@ -58,7 +59,8 @@ namespace GameServer.Model
             {
                 moveTaraget = target;
                 movePosition = Position;
-                Direction = (moveTaraget - movePosition).normalized;
+                var dir = (moveTaraget - movePosition).normalized;  // 计算方向向量
+                Direction = LookRotation(dir) * 1000 * Y1000; // 计算欧拉角,只更新y轴
 
                 // 广播消息
                 NEntitySync nEntitySync = new NEntitySync();
@@ -86,7 +88,7 @@ namespace GameServer.Model
             {
                 // 移动的方向
                 var dir = (moveTaraget - movePosition).normalized;
-                this.Direction = LookRotation(dir) * 1000;
+                this.Direction = LookRotation(dir) * 1000 * Y1000;
                 float dist = Speed * Time.deltaTime;
                 if(Vector3.Distance(moveTaraget, movePosition) < dist)
                 {

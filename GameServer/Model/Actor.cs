@@ -34,6 +34,8 @@ namespace GameServer.Model
         public UnitDefine Define { get; set; }
         public EntityState State;
 
+        public bool IsDeath;    // 角色是否死亡
+
         public Actor(EntityType entityType, int TID, int level, Vector3Int position, Vector3Int direction)
             : base(position, direction)
         {   

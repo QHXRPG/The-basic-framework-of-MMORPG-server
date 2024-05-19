@@ -63,16 +63,19 @@ namespace Summer
             int interval = GetInterval(timeValue, timeUnit);
             long startTime = GetCurrentTime() + interval;
             Task task = new Task(taskMethod, startTime, interval, repeatCount);
-            tasks.Add(task);
+            lock (this) 
+            {
+                tasks.Add(task);
+            }
         }
 
         public void RemoveTask(Action taskMethod)
         {
-            Task taskToRemove = tasks.Find(task => task.TaskMethod == taskMethod);
-            if (taskToRemove != null)
+            lock(tasks) 
             {
-                tasks.Remove(taskToRemove);
+                tasks.RemoveAll(task => task.TaskMethod == taskMethod);
             }
+             
         }
 
 
@@ -89,19 +92,24 @@ namespace Summer
                 Time.Tick();
                 long startTime = GetCurrentTime();
                 // 把完毕的任务移除
-                List<Task> tasksToRemove = tasks.FindAll(task => task.Completed);
-                foreach (Task task in tasksToRemove)
+                lock (tasks) 
                 {
-                    tasks.Remove(task);
-                }
-                // 执行任务
-                foreach (Task task in tasks)
-                {
-                    if (task.ShouldRun())
+                    List<Task> tasksToRemove = tasks.FindAll(task => task.Completed);
+                    foreach (Task task in tasksToRemove)
                     {
-                        task.Run();
+                        tasks.Remove(task);
+                    }
+
+                    // 执行任务
+                    foreach (Task task in tasks)
+                    {
+                        if (task.ShouldRun())
+                        {
+                            task.Run();
+                        }
                     }
                 }
+
                 // 控制周期
                 long endTime = GetCurrentTime();
                 int msTime = (int)(interval - (endTime - startTime));

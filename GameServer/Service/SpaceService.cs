@@ -61,7 +61,6 @@ namespace GameServer.Service
                 return;
             }
 
-
             // 广播同步信息
             Space.UpdateEntity(msg.EntitySync);
         }
