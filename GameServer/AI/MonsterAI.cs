@@ -39,6 +39,7 @@ namespace GameServer.AI
             public int viewRange = 8000;  // 视野范围
             public int walkRange = 8000;  // 相对于出生点的活动范围
             public int chaseRange = 12000; //相对于出生点的追击范围
+            public Random rand = new Random();
         }
 
 
@@ -47,6 +48,9 @@ namespace GameServer.AI
         { 
             // 游戏运行时间
             float lastTime = Time.time;
+
+            float waitTime = 10f;  // 等待时间
+
             public override void OnEnter()
             {
                 P.Owner.StopMove();
@@ -68,9 +72,11 @@ namespace GameServer.AI
                 if (monster.State == EntityState.Idle)
                 {
                     // 到了刷新的时间
-                    if(lastTime+10f<Time.time) 
+                    if(lastTime + waitTime < Time.time) 
                     {
                         lastTime = Time.time;
+
+                        waitTime = P.rand.NextSingle() * 20f + 10f;
 
                         // 移动到随机位置
                         var target = monster.RandomPointWithBirth(P.walkRange);

@@ -36,5 +36,13 @@ namespace GameServer.Mgr
             return spaceDict.GetValueOrDefault(spaceId, null);
         }
 
+        public void Update()
+        {
+            foreach(var space in spaceDict.Values) 
+            {
+                space.Update();
+            }
+        }
+
     }
 }

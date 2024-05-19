@@ -30,13 +30,7 @@ namespace GameServer.Model
             State = EntityState.Idle;
             Random rand = new Random();
 
-            //Schedule.Instance.AddTask(() =>
-            //{
-            //    float x = pos.x + (rand.NextSingle() * 10f - 5f) * 1000;
-            //    float z = pos.z + (rand.NextSingle() * 10f - 5f) * 1000;
-            //    MoveTo(new Vector3(x, 0, z));
-            //},15);
-
+            // 位置同步
             Schedule.Instance.AddTask(() =>
             {
                 if(State != EntityState.Move) return;
@@ -46,6 +40,13 @@ namespace GameServer.Model
                 nEntitySync.State = State;
                 this.Space.UpdateEntity(nEntitySync); // 让当前的地图进行广播
             }, 0.15f);
+
+            // 设置AI对象
+            switch(Define.AI)
+            {
+                case "Monster":
+                    this.AI = new MonsterAI(this); break;
+            }
             
         }
 

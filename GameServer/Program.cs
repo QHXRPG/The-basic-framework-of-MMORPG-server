@@ -67,6 +67,7 @@ namespace GameServer
             Schedule.Instance.AddTask(() =>
             {
                 EntityManager.Instance.Update();
+                SpaceManager.Instance.Update(); 
             }, 0.02f);
 
 

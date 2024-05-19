@@ -31,12 +31,16 @@ namespace GameServer.Model
 
         public MonsterManager monsterManager = new MonsterManager();
 
+        public SpawnManager spawnManager = new SpawnManager();  
+
+
         public Space(SpaceDefine def)
         {
             this.Def = def;
             this.Id = def.SID;
             this.Name = def.Name;   
             monsterManager.Init(this);
+            spawnManager.Init(this);    
         }
 
         public void CharacterJoin(Connection conn, Character character)
@@ -141,6 +145,11 @@ namespace GameServer.Model
             {
                 kv.Value.conn.Send(resp);
             }
+        }
+
+        public void Update()
+        {
+            this.spawnManager.Update();
         }
     }
 }

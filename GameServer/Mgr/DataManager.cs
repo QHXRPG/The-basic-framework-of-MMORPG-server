@@ -11,11 +11,16 @@ public class DataManager : Singleton<DataManager>
 
     // 单元字典
     public Dictionary<int, UnitDefine> Units;
+
+    //刷怪字典
+    public Dictionary<int, SpawnDefine> Spawns;
+
     public void Init()
     {
         // 反序列化
         Spaces = Load<SpaceDefine>("Data/SpaceDefine.json");
         Units = Load<UnitDefine>("Data/UnitDefine.json");
+        Spawns = Load<SpawnDefine>("Data/SpawnDefine.json");
     }
 
     public Dictionary<int, T> Load<T>(string filePath)

@@ -53,5 +53,10 @@ namespace GameServer.Model
             this.Space = space;
             this.Info.SpaceId = space.Id;
         }
+
+        public void Revive()
+        {
+            this.IsDeath = false;
+        }
     }
 }
