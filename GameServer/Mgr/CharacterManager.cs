@@ -1,6 +1,7 @@
 ﻿using FreeSql;
 using GameServer.Database;
 using GameServer.Model;
+using Proto.Message;
 using Summer;
 using System;
 using System.Collections.Concurrent;
@@ -67,6 +68,10 @@ namespace GameServer.Mgr
         {
             foreach (var character in Characters.Values) 
             {
+                // 记录当前客户端自己的角色的位置信息, 以便于让  Character 对象中的 Save 更新给数据库
+                character.Data.X = character.Position.x; 
+                character.Data.Y = character.Position.y;
+                character.Data.Z = character.Position.z;
                 repo.UpdateAsync(character.Data);
             }
         }

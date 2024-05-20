@@ -117,12 +117,6 @@ namespace GameServer.Model
                 {
                     // 把传进来的 Entity 的状态 赋值给 服务器对象Entity当中
                     kv.Value.EntityData = entitySync.Entity;
-                    var myCharacter = kv.Value;  // 客户端自己的角色
-
-                    // 记录当前客户端自己的角色的位置信息, 以便于让  Character 对象中的 Save 更新给数据库
-                    myCharacter.Data.X = entitySync.Entity.Position.X;
-                    myCharacter.Data.Y = entitySync.Entity.Position.Y;
-                    myCharacter.Data.Z = entitySync.Entity.Position.Z;
                 }
                 else  //其他人
                 {

@@ -7,6 +7,7 @@ using Summer;
 using GameServer.Mgr;
 using Proto.Message;
 using System.Threading;
+using GameServer.Battle;
 
 namespace GameServer.Model
 {
@@ -32,7 +33,10 @@ namespace GameServer.Model
         public EntityType Type { get { return Info.EntityType; } set { Info.EntityType = value; } }
 
         public UnitDefine Define { get; set; }
+
         public EntityState State;
+
+        public Attributes Attr { get; set; } = new Attributes();  
 
         public bool IsDeath;    // 角色是否死亡
 
