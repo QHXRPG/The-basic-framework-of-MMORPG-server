@@ -12,6 +12,7 @@ using GameServer.Mgr;
 using GameServer.Service;
 using GameServer.Database;
 using System.Runtime.Intrinsics.Arm;
+using GameServer.Core;
 
 namespace Common.Network.Server
 {
@@ -71,7 +72,7 @@ namespace Common.Network.Server
         private void _CharacterDeleteRequest(Connection conn, CharacterDeleteRequest msg)
         {
             Log.Information($"删除角色:{msg.CharacterId}");
-            var player = conn.Get<DbPlayer>(); // 通过连接在数据库中拿到玩家的信息
+            var player = conn.Get<Session>().DbPlayer; // 通过连接在数据库中拿到玩家的信息
             Db.fsql.Delete<DbCharacter>()
                 .Where(t => t.Id == msg.CharacterId)
                 .Where(t => t.PlayerId == player.Id)
@@ -87,7 +88,7 @@ namespace Common.Network.Server
         // 查询角色列表的请求
         private void _CharacterListRequest(Connection conn, CharacterListRequest msg)
         {
-            var player = conn.Get<DbPlayer>(); // 通过连接在数据库中拿到玩家的信息
+            var player = conn.Get<Session>().DbPlayer; // 通过连接在数据库中拿到玩家的信息
 
             // 从数据库中查询到玩家的全部角色
             var list = Db.fsql.Select<DbCharacter>().Where(t => t.PlayerId == player.Id).ToList();
@@ -114,7 +115,7 @@ namespace Common.Network.Server
         {
             Log.Information("创建角色请求:{0}", msg);
             CharacterCreateResponse response = new CharacterCreateResponse();
-            var player = conn.Get<DbPlayer>();  // 把player从数据库中取出来
+            var player = conn.Get<Session>().DbPlayer;  // 把player从数据库中取出来
             if(player == null)
             {
                 Log.Information("未登录不能创建角色");
@@ -194,7 +195,9 @@ namespace Common.Network.Server
             {
                 response.Success = true;
                 response.Message = "登录成功";
-                conn.Set<DbPlayer>(dbPlayer);  // 登录成功后，在conn连接里记录玩家信息
+
+                // 登录成功后，在conn连接里记录玩家信息
+                conn.Get<Session>().DbPlayer = dbPlayer;
             }
             else
             {
@@ -211,7 +214,7 @@ namespace Common.Network.Server
             int entityId = EntityManager.Instance.NewEntityId; 
 
             // 获取玩家
-            var player = conn.Get<DbPlayer>();
+            var player = conn.Get<Session>().DbPlayer;
 
             // 查询数据库的角色
             var DbCharacter = Db.fsql.Select<DbCharacter>()

@@ -49,6 +49,7 @@ namespace GameServer.Model
             this.Info.Mp = dbCharacter.Mp;
             this.Data = dbCharacter;
             this.Speed = unitDefine.Speed;
+            this.Attr.Init(unitDefine, this.Info.Level);
         }
 
         // Character 类型隐式转换 dbCharacter

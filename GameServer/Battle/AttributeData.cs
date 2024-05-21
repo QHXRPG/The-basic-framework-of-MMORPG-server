@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,6 +82,10 @@ namespace GameServer.Battle
             this.Speed = 0;
             this.HPMax = 0;
             this.MPMax = 0;
+        }
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
         }
     }
 }

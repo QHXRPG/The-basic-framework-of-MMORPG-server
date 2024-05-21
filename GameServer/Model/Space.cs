@@ -9,6 +9,7 @@ using Serilog;
 using Proto;
 using Proto.Message;
 using GameServer.Mgr;
+using GameServer.Core;
 
 namespace GameServer.Model
 {
@@ -46,7 +47,7 @@ namespace GameServer.Model
         public void CharacterJoin(Connection conn, Character character)
         {
             Log.Information($"角色 {character.Id} 进入场景：{character.SpaceId}" );
-            conn.Set<Character>(character);   // 把角色character存入对应的conn连接当中
+            conn.Get<Session>().Character = character;   // 把角色character存入session
             character.OnEnterSpace(this);
 
            CharacterDict[character.Id] = character;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,6 +37,9 @@ namespace GameServer.Battle
             Initial.CRD = define.CRD;
             Initial.CRI = define.CRI;
             Initial.INT = define.INT;
+            Initial.GAGI = define.GAGI;
+            Initial.GINT = define.GINT;
+            Initial.GSTR = define.GSTR;
 
             // 成长属性的加持
             var Growth = new AttributeData();
@@ -47,7 +51,7 @@ namespace GameServer.Battle
             Basic.Add(Initial);
             Basic.Add(Growth);
 
-            // tido 处理装备和buff
+            // todo 处理装备和buff
 
             // 合并到最终属性
             Final.Add(Basic);
@@ -59,6 +63,13 @@ namespace GameServer.Battle
             Extra.HPMax = Final.STR * 5;  // 每点力量增加5点最大生命值
             Extra.AP = Final.INT * 1.5f;
             Final.Add(Extra);
+
+/*          Log.Information("初始属性：{0}",Initial);
+            Log.Information("成长属性：{0}",Growth);
+            Log.Information("装备属性：{0}",Equip);
+            Log.Information("Buff属性：{0}",Buffs);
+            Log.Information("属性附加：{0}",Extra);
+            Log.Information("最终属性：{0}",Final);*/
         }
     }
 }

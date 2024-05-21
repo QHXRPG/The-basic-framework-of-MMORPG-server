@@ -10,6 +10,7 @@ using Summer;
 using GameServer.Model;
 using System.Reflection;
 using GameServer.Mgr;
+using GameServer.Core;
 
 namespace GameServer.Service
 {
@@ -35,7 +36,7 @@ namespace GameServer.Service
         private void _SpaceEntitySyncRequest(Connection conn, SpaceEntitySyncRequest msg)
         {
             // 通过conn拿到角色所在的地图
-            var Space = conn.Get<Character>()?.Space;
+            var Space = conn.Get<Session>().Character?.Space;
             if (Space == null) return;
 
             NEntity netEntity = msg.EntitySync.Entity;

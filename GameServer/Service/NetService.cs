@@ -11,6 +11,7 @@ using Summer;
 using Serilog;
 using GameServer.Model;
 using GameServer.Mgr;
+using GameServer.Core;
 
 namespace GameServer.Network
 {
@@ -72,6 +73,7 @@ namespace GameServer.Network
         {
             heartBeatPairs[conn] = DateTime.Now; //记录心跳时间
             Log.Information("客户端接入");
+            conn.Set<Session>(new Session());
 
         }
 
@@ -79,14 +81,13 @@ namespace GameServer.Network
         {
             heartBeatPairs.Remove(conn);
             Log.Information("连接断开" + conn);
-            Character character = conn.Get<Character>();  
+            Character character = conn.Get<Session>().Character;  
 
             // 通知其它客户端，该客户端已离开该场景
-            var space = conn.Get<Character>()?.Space;
+            var space = conn.Get<Session>().Character?.Space;
             if(space != null)
             {
-                var co = conn.Get<Character>();
-                space.CharacterLeave(conn, co);
+                space.CharacterLeave(conn, character);
                 CharacterManager.Instance.RemoveCharacter(character.Id);
             }
         }
