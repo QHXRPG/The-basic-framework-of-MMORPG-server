@@ -84,6 +84,7 @@ namespace GameServer.Model
 
         public override void Update()
         {
+            base.Update();
             AI?.Update();
             if(State == EntityState.Move)
             {

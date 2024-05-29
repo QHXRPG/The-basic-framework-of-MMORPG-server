@@ -40,6 +40,7 @@ namespace GameServer.Model
 
         public bool IsDeath;    // 角色是否死亡
 
+        public SkillManager skillMgr;
         public Actor(EntityType entityType, int TID, int level, Vector3Int position, Vector3Int direction)
             : base(position, direction)
         {   
@@ -50,6 +51,9 @@ namespace GameServer.Model
             this.Info.EntityType = entityType;    // 实体类型
             this.Info.Entity = this.EntityData; 
             this.Speed = Define.Speed;
+            this.Info.Hp = (int)Define.HPMax;
+            this.Info.Mp = (int)Define.MPMax;
+            this.skillMgr = new SkillManager(this);
         }
 
         public void OnEnterSpace(Space space)
@@ -61,6 +65,11 @@ namespace GameServer.Model
         public void Revive()
         {
             this.IsDeath = false;
+        }
+
+        public override void Update()
+        {
+            this.skillMgr.Update();
         }
     }
 }

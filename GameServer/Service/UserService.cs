@@ -88,27 +88,30 @@ namespace Common.Network.Server
         // 查询角色列表的请求
         private void _CharacterListRequest(Connection conn, CharacterListRequest msg)
         {
-            var player = conn.Get<Session>().DbPlayer; // 通过连接在数据库中拿到玩家的信息
-
-            // 从数据库中查询到玩家的全部角色
-            var list = Db.fsql.Select<DbCharacter>().Where(t => t.PlayerId == player.Id).ToList();
-            CharacterListResponse characterListResponse = new CharacterListResponse();
-            foreach (var item in list)
+            try
             {
-                // Entity 以及 EntityId 需要 开始游戏 后才给值
-                characterListResponse.CharacterList.Add(new NCharacter()
+                var player = conn.Get<Session>().DbPlayer; // 通过连接在数据库中拿到玩家的信息
+
+                // 从数据库中查询到玩家的全部角色
+                var list = Db.fsql.Select<DbCharacter>().Where(t => t.PlayerId == player.Id).ToList();
+                CharacterListResponse characterListResponse = new CharacterListResponse();
+                foreach (var item in list)
                 {
-                    Id = item.Id,
-                    Tid = item.JobId,
-                    Name = item.Name,
-                    Level = item.Level,
-                    Exp = item.Exp,
-                    SpaceId = item.SpaceId,
-                    Gold = item.Gold,
-                });
+                    // Entity 以及 EntityId 需要 开始游戏 后才给值
+                    characterListResponse.CharacterList.Add(new NCharacter()
+                    {
+                        Id = item.Id,
+                        Tid = item.JobId,
+                        Name = item.Name,
+                        Level = item.Level,
+                        Exp = item.Exp,
+                        SpaceId = item.SpaceId,
+                        Gold = item.Gold,
+                    });
+                }
+                conn.Send(characterListResponse);
             }
-            conn.Send(characterListResponse);
-            
+            catch { }
         }
 
         private void _CharacterCreateRequest(Connection conn, CharacterCreateRequest msg)

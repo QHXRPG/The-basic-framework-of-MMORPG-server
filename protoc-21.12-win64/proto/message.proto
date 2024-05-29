@@ -130,7 +130,43 @@ message NCharacter{
     int32 hp = 10;
     int32 mp = 11;
     EntityType entityType = 12;
+    repeated SkillInfo Skills = 13;
 }
+
+// 技能信息
+message SkillInfo
+{
+    int32 id = 1; // 技能id
+}
+
+// 技能释放结果
+enum CastResult{
+    Success = 0;     // 技能释放成功
+    InvalidTarget = 1;  //目标无效
+    OutOfRange = 2;   // 超出范围
+    OutOfMp = 3;   // MP不足
+    Casting = 4;    // 前摇中
+    Active = 5;     // 技能已激活
+    CoolDown = 6;   // 冷却中
+}
+
+//释放信息
+message CastInfo{
+    int32 casterId = 1;  // 施法者Id
+    int32 skillId = 2;   // 技能Id
+    int32 targetId = 3;  // 技能释放单位
+    NVector3 point = 4;  // 技能释放点位
+    CastResult resule= 5; // 技能释放结果
+}
+
+message SkillCastRequest{
+    CastInfo info = 1;          // 自己放的技能
+}
+
+message SkillCastResponse{
+    repeated CastInfo list = 1;   // 同场景下多个人释放的技能的列表
+}
+
 
 message CharacterCreateResponse{
     bool success = 1;
