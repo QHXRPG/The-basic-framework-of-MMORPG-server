@@ -31,14 +31,23 @@ namespace GameServer.Mgr
         public void InitSkills()
         {
             // 初始化技能信息，正常是通过读取数据库来加载技能信息
-            var list = DataManager.Instance.Skills.Values
-                        .Where(s => s.TID == owner.Define.TID).ToList();  // 什么单位就拿什么技能
-            Log.Information("角色  " + owner.Name+ "角色TID  " + owner.Define.TID + 
-                            " 加载技能:" + list+"   "+list.Count);
-            foreach (var define in list)
+            if(this.owner.Define.TID == 1)
             {
-                owner.Info.Skills.Add(new SkillInfo() { Id = define.ID });
-                var skill = new Skill(owner, define.ID);
+                loadSkill(4, 7, 8);
+            }
+
+            if(this.owner.Define.TID == 2)
+            {
+                loadSkill(9, 10);
+            }
+        }
+
+        private void loadSkill(params int[] ids)
+        {
+            foreach(int skid in ids) 
+            {
+                owner.Info.Skills.Add(new Proto.Message.SkillInfo() { Id = skid });
+                var skill = new Skill(owner, skid);
                 Skills.Add(skill);
                 Log.Information("角色{0}加载技能{1}-{2}",
                                 owner.Name, skill.Define.ID, skill.Define.Name);
