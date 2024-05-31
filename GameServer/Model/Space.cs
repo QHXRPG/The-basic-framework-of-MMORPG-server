@@ -10,6 +10,7 @@ using Proto;
 using Proto.Message;
 using GameServer.Mgr;
 using GameServer.Core;
+using GameServer.Fight;
 
 namespace GameServer.Model
 {
@@ -34,12 +35,15 @@ namespace GameServer.Model
 
         public SpawnManager spawnManager = new SpawnManager();  
 
+        public FightMgr fightMgr { get; set; }
+
 
         public Space(SpaceDefine def)
         {
             this.Def = def;
             this.Id = def.SID;
-            this.Name = def.Name;   
+            this.Name = def.Name;
+            this.fightMgr = new FightMgr(this);
             monsterManager.Init(this);
             spawnManager.Init(this);    
         }
@@ -145,6 +149,7 @@ namespace GameServer.Model
         public void Update()
         {
             this.spawnManager.Update();
+            this.fightMgr.OnUpdate(Time.deltaTime);
         }
     }
 }

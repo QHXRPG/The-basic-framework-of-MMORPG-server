@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace GameServer.Mgr
 {
+    // 刷怪规则
     public class Spawner
     {
         public SpawnDefine define;

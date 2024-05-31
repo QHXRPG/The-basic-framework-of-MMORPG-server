@@ -50,6 +50,11 @@ namespace GameServer
             spaceService.Start();
             Log.Debug("地图同步服务启动");
 
+            // 战斗服务
+            BattleService.Instance.Start();
+            Log.Debug("战斗服务启动");
+
+
             // 中心计时器
             Schedule.Instance.Start();
             Log.Debug("中心计时器启动");
@@ -60,11 +65,11 @@ namespace GameServer
             monster.AI = new MonsterAI(monster);
 
 
-
             // 用户登录消息
             MessageRouter.Instance.Subscribe<UserLoginRequest>(OnUserLoginRequest);
 
-            Schedule.Instance.AddTask(() =>
+            // 在线程调度器中添加任务
+            Schedule .Instance.AddTask(() =>
             {
                 EntityManager.Instance.Update();
                 SpaceManager.Instance.Update(); 

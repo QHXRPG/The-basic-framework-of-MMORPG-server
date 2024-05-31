@@ -40,6 +40,11 @@ namespace GameServer.Mgr
             {
                 loadSkill(9, 10);
             }
+
+            if (this.owner.Define.TID == 3)
+            {
+                loadSkill(9, 10);
+            }
         }
 
         private void loadSkill(params int[] ids)
