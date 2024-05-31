@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Google.Protobuf.WellKnownTypes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,69 +8,84 @@ using System.Threading.Tasks;
 
 namespace GameServer.Battle
 {
+    // 属性数据
     public class Attributes
     {
-        private AttributeData Basic;  // 基础属性 (定义+成长)
-        private AttributeData Equip;  // 装备属性
-        private AttributeData Buffs;  // BUFF属性
-        private AttributeData Final;  // 最终属性
+        // 属性数据项
+        public float AD;
+        public float AP;
+        public float DEF;
+        public float MDEF;
+        public float CRI;
+        public float CRD;
+        public float STR;
+        public float INT;
+        public float AGI;
+        public float GSTR;
+        public float GINT;
+        public float GAGI;
+        public float Speed;
+        public float HPMax;
+        public float MPMax;
 
 
-        // 属性初始化
-        public void Init(UnitDefine define, int level)
+        // 属性融合
+        public void Add(Attributes data)
         {
-            Basic = new AttributeData();
-            Equip = new AttributeData();
-            Buffs = new AttributeData();
-            Final = new AttributeData();
+            this.AP += data.AP;
+            this.DEF += data.DEF;
+            this.MDEF += data.MDEF;
+            this.CRI += data.CRI;
+            this.CRD += data.CRD;
+            this.STR += data.STR;
+            this.INT += data.INT;
+            this.AGI += data.AGI;
+            this.GSTR += data.GSTR;
+            this.GINT += data.GINT;
+            this.Speed += data.Speed;
+            this.HPMax += data.HPMax;
+            this.MPMax += data.MPMax;
+        }
 
-            // 初始属性
-            var Initial = new AttributeData();
-            Initial.HPMax = define.HPMax;
-            Initial.AP = define.AP;
-            Initial.STR = define.STR;
-            Initial.DEF = define.DEF;
-            Initial.AGI = define.AGI;
-            Initial.Speed = define.Speed;
-            Initial.MPMax = define.MPMax;
-            Initial.AD = define.AD;   
-            Initial.MDEF = define.MDEF;
-            Initial.CRD = define.CRD;
-            Initial.CRI = define.CRI;
-            Initial.INT = define.INT;
-            Initial.GAGI = define.GAGI;
-            Initial.GINT = define.GINT;
-            Initial.GSTR = define.GSTR;
 
-            // 成长属性的加持
-            var Growth = new AttributeData();
-            Growth.STR = define.GSTR * level;   // 力量成长
-            Growth.INT = define.GINT * level;   // 智力成长
-            Growth.AGI = define.GAGI * level;   // 敏捷成长
+        // 属性移除
+        public void Sub(Attributes data) 
+        {
+            this.AP -= data.AP;
+            this.DEF -= data.DEF;
+            this.MDEF -= data.MDEF;
+            this.CRI -= data.CRI;
+            this.CRD -= data.CRD;
+            this.STR -= data.STR;
+            this.INT -= data.INT;
+            this.AGI -= data.AGI;
+            this.GSTR -= data.GSTR;
+            this.GINT -= data.GINT;
+            this.Speed -= data.Speed;
+            this.HPMax -= data.HPMax;
+            this.MPMax -= data.MPMax;
+        }
 
-            // 基础属性 = 初始属性 + 成长属性
-            Basic.Add(Initial);
-            Basic.Add(Growth);
-
-            // todo 处理装备和buff
-
-            // 合并到最终属性
-            Final.Add(Basic);
-            Final.Add(Equip);
-            Final.Add(Buffs);
-
-            // 计算附加属性
-            var Extra = new AttributeData();
-            Extra.HPMax = Final.STR * 5;  // 每点力量增加5点最大生命值
-            Extra.AP = Final.INT * 1.5f;
-            Final.Add(Extra);
-
-/*          Log.Information("初始属性：{0}",Initial);
-            Log.Information("成长属性：{0}",Growth);
-            Log.Information("装备属性：{0}",Equip);
-            Log.Information("Buff属性：{0}",Buffs);
-            Log.Information("属性附加：{0}",Extra);
-            Log.Information("最终属性：{0}",Final);*/
+        // 属性重置
+        public void Reset()
+        {
+            this.AP = 0;
+            this.DEF = 0;
+            this.MDEF = 0;
+            this.CRI = 0;
+            this.CRD = 0;
+            this.STR = 0;
+            this.INT = 0;
+            this.AGI = 0;
+            this.GSTR = 0;
+            this.GINT = 0;
+            this.Speed = 0;
+            this.HPMax = 0;
+            this.MPMax = 0;
+        }
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
         }
     }
 }

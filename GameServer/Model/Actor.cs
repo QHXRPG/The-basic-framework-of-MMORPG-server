@@ -36,7 +36,7 @@ namespace GameServer.Model
 
         public EntityState State;
 
-        public Attributes Attr { get; set; } = new Attributes();  
+        public AttributesAssembly Attr { get; set; } = new AttributesAssembly();  
 
         public bool IsDeath;    // 角色是否死亡
 
@@ -54,6 +54,7 @@ namespace GameServer.Model
             this.Info.Hp = (int)Define.HPMax;
             this.Info.Mp = (int)Define.MPMax;
             this.skillMgr = new SkillManager(this);
+            this.Attr.Init(this);
         }
 
         public void OnEnterSpace(Space space)
