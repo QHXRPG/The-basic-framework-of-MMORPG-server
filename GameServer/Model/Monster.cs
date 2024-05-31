@@ -31,7 +31,7 @@ namespace GameServer.Model
             Random rand = new Random();
 
             // 位置同步
-            Schedule.Instance.AddTask(() =>
+            Scheduler.Instance.AddTask(() =>
             {
                 if(State != EntityState.Move) return;
                 // 广播消息

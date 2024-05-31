@@ -56,7 +56,7 @@ namespace GameServer
 
 
             // 中心计时器
-            Schedule.Instance.Start();
+            Scheduler.Instance.Start();
             Log.Debug("中心计时器启动");
 
             Space space = SpaceManager.Instance.GetSpace(2);
@@ -69,7 +69,7 @@ namespace GameServer
             MessageRouter.Instance.Subscribe<UserLoginRequest>(OnUserLoginRequest);
 
             // 在线程调度器中添加任务
-            Schedule .Instance.AddTask(() =>
+            Scheduler .Instance.AddTask(() =>
             {
                 EntityManager.Instance.Update();
                 SpaceManager.Instance.Update(); 

@@ -30,7 +30,7 @@ namespace GameServer.Mgr
 
 
             // 用中心计时器 单线程计时 执行 保存角色位置 任务（每两秒一次）
-            Schedule.Instance.AddTask(Save, 2); 
+            Scheduler.Instance.AddTask(Save, 2); 
         }
 
         // 通过数据库对象创建一个角色对象

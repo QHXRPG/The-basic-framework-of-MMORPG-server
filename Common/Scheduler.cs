@@ -1,55 +1,47 @@
 ﻿using Serilog;
 using Summer;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Summer
 {
-    
-    public class Schedule : Singleton<Schedule>
+    /// <summary>
+    /// 中心计时器
+    /// </summary>
+    public class Scheduler : Singleton<Scheduler>
     {
-        /* 
-         * 
-         * 
-         *      该对象只用一个线程，每个 Schedule 只有一个独立的线程，
-         *      通过主循环 RunLoop 在一个 While 中无限地循环
-         *      由于是单线程，所以用它来做计时任务都会在同一个线程内执行， 遵循先来后到
-         *      这样数据就不容易出错，有序.
-         * 
-         * 
-         */
+        //任务列表
         private List<Task> tasks = new List<Task>();
-        private Thread thread;
-        private int fps = 100; // 每秒帧数
-
-        public Schedule()
-        {
-            
-        }
-
         
+        // 新增任务的队列
+        private ConcurrentQueue<Task> _addQueue = new ConcurrentQueue<Task>();
 
-        public Schedule Start()
-        {
-            if(thread == null)
-            {
-                thread = new Thread(Run);
-            }
-            thread?.Start();
-            return this;
-        }   
+        // 移除任务的队列
+        private ConcurrentQueue<Action> _removeQueue = new();
 
-        public Schedule Stop()
+        private int fps = 50; // 每秒帧数
+
+        public Scheduler()
         {
-            thread?.Abort();
-            return this;
+
         }
 
-        private void Run()
+
+        Timer timer;
+        public void Start()
         {
-            RunLoop();
+            if (timer != null) return;
+            timer = new Timer(new TimerCallback(Execute), null, 0, 1);
+        }
+
+        public void Stop()
+        {
+            timer.Dispose();
+            timer = null;
         }
 
 
@@ -61,71 +53,79 @@ namespace Summer
         public void AddTask(Action taskMethod, int timeValue, TimeUnit timeUnit, int repeatCount = 0)
         {
             int interval = GetInterval(timeValue, timeUnit);
-            long startTime = GetCurrentTime() + interval;
+            long startTime = UnixTime + interval;
             Task task = new Task(taskMethod, startTime, interval, repeatCount);
-            lock (this) 
-            {
-                tasks.Add(task);
-            }
+            _addQueue.Enqueue(task);
+        }
+
+        public void AddTask(Action taskMethod, float delay, float interval, int repeatCount = 0)
+        {
+            int _interval = (int)(interval * 1000);
+            long startTime = UnixTime + (long)(delay * 1000);
+            Task task = new Task(taskMethod, startTime, _interval, repeatCount);
+            _addQueue.Enqueue(task);
         }
 
         public void RemoveTask(Action taskMethod)
         {
-            lock(tasks) 
-            {
-                tasks.RemoveAll(task => task.TaskMethod == taskMethod);
-            }
-             
+            _removeQueue.Enqueue(taskMethod);
+        }
+        /// <summary>
+        /// 每帧都会执行
+        /// </summary>
+        /// <param name="action"></param>
+        public void Update(Action action)
+        {
+            Task task = new Task(action, 0, 0, 0);
+            _addQueue.Enqueue(task);
         }
 
+        //下一帧执行的时间
+        private long _next = 0;
 
         /// <summary>
         /// 计时器主循环
         /// </summary>
-        private void RunLoop()
+        private void Execute(object state)
         {
             // tick间隔
-            int interval = 1000 / fps; 
-            // 开始循环
-            while (true)
+            int interval = 1000 / fps;
+            long time = UnixTime;
+            if (time < _next) return;
+            _next = time + interval;
+
+            Time.Tick();
+
+            //处理逻辑帧
+            lock (tasks)
             {
-                Time.Tick();
-                long startTime = GetCurrentTime();
-                // 把完毕的任务移除
-                lock (tasks) 
+                //移除队列
+                while (_removeQueue.TryDequeue(out var item))
                 {
-                    List<Task> tasksToRemove = tasks.FindAll(task => task.Completed);
-                    foreach (Task task in tasksToRemove)
+                    tasks.RemoveAll(task => task.TaskMethod == item);
+                }
+                // 移除完毕的任务
+                tasks.RemoveAll(task => task.Completed);
+                // 添加队列任务
+                while (_addQueue.TryDequeue(out var item))
+                {
+                    tasks.Add(item);
+                }
+                // 执行任务
+                foreach (Task task in tasks)
+                {
+                    if (task.ShouldRun())
                     {
-                        tasks.Remove(task);
-                    }
-
-                    // 执行任务
-                    foreach (Task task in tasks)
-                    {
-                        if (task.ShouldRun())
-                        {
-                            task.Run();
-                        }
+                        task.Run();
                     }
                 }
-
-                // 控制周期
-                long endTime = GetCurrentTime();
-                int msTime = (int)(interval - (endTime - startTime));
-                if(msTime > 0)
-                {
-                    Thread.Sleep(msTime); // Sleep for millisecond
-                }
-                
             }
+
         }
 
-        public static long GetCurrentTime()
-        {
-            // 获取从1970年1月1日午夜（也称为UNIX纪元）到现在的毫秒数
-            return DateTimeOffset.Now.ToUnixTimeMilliseconds();
-        }
+
+        // 获取从1970年1月1日午夜（也称为UNIX纪元）到现在的毫秒数
+        public static long UnixTime { get => DateTimeOffset.Now.ToUnixTimeMilliseconds(); }
 
         private int GetInterval(int timeValue, TimeUnit timeUnit)
         {
@@ -176,7 +176,7 @@ namespace Summer
                     return false;
                 }
 
-                long now = GetCurrentTime();
+                long now = UnixTime;
                 if (now >= StartTime && (now - lastTick) >= Interval)
                 {
                     return true;
@@ -187,16 +187,17 @@ namespace Summer
 
             public void Run()
             {
-                lastTick = GetCurrentTime();
+                lastTick = UnixTime;
                 try
                 {
                     TaskMethod.Invoke();
-                }catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
-                    Log.Error("Schedule has Error:{0}",ex.Message);
+                    Log.Error("Scheduler has Error:{0}", ex.Message);
                     return;
                 }
-                
+
 
                 currentCount++;
 
@@ -220,13 +221,14 @@ namespace Summer
 
     public class Time
     {
-        // 记录游戏的开始时间
+        //游戏开始的时间戳
         private static long startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-
-        // 游戏运行时间（秒）
+        /// <summary>
+        /// 游戏的运行时间（秒）
+        /// </summary>
         public static float time { get; private set; }
         /// <summary>
-        /// 获取上一帧运行所用的时间
+        /// 获取上一帧运行所用的时间（秒）
         /// </summary>
         public static float deltaTime { get; private set; }
 
