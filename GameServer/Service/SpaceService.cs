@@ -39,7 +39,7 @@ namespace GameServer.Service
             var Space = conn.Get<Session>().Character?.Space;
             if (Space == null) return;
 
-            NEntity netEntity = msg.EntitySync.Entity;
+            NetEntity netEntity = msg.EntitySync.Entity;
             Entity serEntity = EntityManager.Instance.GetEntity(netEntity.Id);
             float dist = Vector3Int.Distance(netEntity.Position, serEntity.Position);
             
@@ -55,7 +55,7 @@ namespace GameServer.Service
             { 
                 // 把角色拉回原位
                 SpaceEntitySyncResponse resp = new SpaceEntitySyncResponse();
-                resp.EntitySync = new NEntitySync();
+                resp.EntitySync = new NetEntitySync();
                 resp.EntitySync.Entity = serEntity.EntityData;  // 采用服务器这边的数据
                 resp.EntitySync.Force = true;
                 conn.Send(resp);

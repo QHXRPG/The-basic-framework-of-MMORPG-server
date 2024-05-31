@@ -35,10 +35,10 @@ namespace GameServer.Model
             {
                 if(State != EntityState.Move) return;
                 // 广播消息
-                NEntitySync nEntitySync = new NEntitySync();
-                nEntitySync.Entity = EntityData;
-                nEntitySync.State = State;
-                this.Space.UpdateEntity(nEntitySync); // 让当前的地图进行广播
+                NetEntitySync NetEntitySync = new NetEntitySync();
+                NetEntitySync.Entity = EntityData;
+                NetEntitySync.State = State;
+                this.Space.UpdateEntity(NetEntitySync); // 让当前的地图进行广播
             }, 0.15f);
 
             // 设置AI对象
@@ -64,10 +64,10 @@ namespace GameServer.Model
                 Direction = LookRotation(dir) * 1000 * Y1000; // 计算欧拉角,只更新y轴
 
                 // 广播消息
-                NEntitySync nEntitySync = new NEntitySync();
-                nEntitySync.Entity = EntityData;
-                nEntitySync.State = State;
-                this.Space.UpdateEntity(nEntitySync); // 让当前的地图进行广播
+                NetEntitySync NetEntitySync = new NetEntitySync();
+                NetEntitySync.Entity = EntityData;
+                NetEntitySync.State = State;
+                this.Space.UpdateEntity(NetEntitySync); // 让当前的地图进行广播
             }
         }
 
@@ -76,10 +76,10 @@ namespace GameServer.Model
             State = EntityState.Idle;
             movePosition = moveTaraget;
             // 广播消息
-            NEntitySync nEntitySync = new NEntitySync();
-            nEntitySync.Entity = EntityData;
-            nEntitySync.State = State;
-            this.Space.UpdateEntity(nEntitySync); // 让当前的地图进行广播
+            NetEntitySync NetEntitySync = new NetEntitySync();
+            NetEntitySync.Entity = EntityData;
+            NetEntitySync.State = State;
+            this.Space.UpdateEntity(NetEntitySync); // 让当前的地图进行广播
         }
 
         public override void Update()

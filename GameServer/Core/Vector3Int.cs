@@ -433,22 +433,7 @@ namespace GameServer
             return !(lhs == rhs);
         }
 
-        public static implicit operator Vector3Int(NVector3 v)
-        {
-            return new Vector3Int() { x=v.X, y=v.Y, z=v.Z };
-        }
-        public static implicit operator NVector3(Vector3Int v)
-        {
-            return new NVector3() { X=v.x, Y=v.y, Z=v.z };
-        }
-        public static implicit operator Vector3(Vector3Int v)
-        {
-            return new Vector3() { x = v.x, y = v.y, z = v.z };
-        }
-        public static implicit operator Vector3Int(Vector3 v)
-        {
-            return new Vector3Int() { x = (int)v.x, y = (int)v.y, z = (int)v.z };
-        }
+        
 
         //
         // 摘要:
@@ -530,6 +515,25 @@ namespace GameServer
         public string ToString(string format, IFormatProvider formatProvider)
         {
             return string.Format(formatProvider, "({0}, {1}, {2})", x.ToString(format, formatProvider), y.ToString(format, formatProvider), z.ToString(format, formatProvider));
+        }
+
+
+
+        public static implicit operator Vector3Int(Vec3 v)
+        {
+            return new Vector3Int() { x = v.X, y = v.Y, z = v.Z };
+        }
+        public static implicit operator Vec3(Vector3Int v)
+        {
+            return new Vec3() { X = v.x, Y = v.y, Z = v.z };
+        }
+        public static implicit operator Vector3(Vector3Int v)
+        {
+            return new Vector3() { x = v.x, y = v.y, z = v.z };
+        }
+        public static implicit operator Vector3Int(Vector3 v)
+        {
+            return new Vector3Int() { x = (int)v.x, y = (int)v.y, z = (int)v.z };
         }
     }
 }

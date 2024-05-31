@@ -29,7 +29,7 @@ namespace GameServer.Mgr
             Monster monster = new Monster(tid, level, pos, dir);
             EntityManager.Instance.AddEntity(_space.Id, monster);  // 把怪物加到实体管理器中
             monster.Info.SpaceId = _space.Id;
-            monster.Info.EntityId = monster.entityId;
+            monster.Info.Entity.Id = monster.entityId;
             _dict[monster.entityId] = monster;
             monster.Id = monster.entityId;
 

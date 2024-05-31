@@ -98,7 +98,7 @@ namespace Common.Network.Server
                 foreach (var item in list)
                 {
                     // Entity 以及 EntityId 需要 开始游戏 后才给值
-                    characterListResponse.CharacterList.Add(new NCharacter()
+                    characterListResponse.CharacterList.Add(new NetActor()
                     {
                         Id = item.Id,
                         Tid = item.JobId,

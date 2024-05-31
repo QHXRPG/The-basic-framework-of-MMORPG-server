@@ -16,10 +16,10 @@ namespace GameServer.Service
         public void Start()
         {
             // 客户端传来的技能释放请求
-            MessageRouter.Instance.Subscribe<SkillCastRequest>(_SkillCastRequest);
+            MessageRouter.Instance.Subscribe<SpellRequest>(_SpellRequest);
         }
 
-        private void _SkillCastRequest(Connection conn, SkillCastRequest msg)
+        private void _SpellRequest(Connection conn, SpellRequest msg)
         {
             Log.Information("技能施法请求：{0}", msg);
             var session = conn.Get<Session>();

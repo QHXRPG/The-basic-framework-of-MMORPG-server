@@ -61,12 +61,12 @@ namespace GameServer.Model
                 ConnCharater[conn] = character; 
             }
             // 广播新客户端连接给场景其它玩家
-            NEntity e = new NEntity();
+            NetEntity e = new NetEntity();
             var resp = new SpaceCharaterEnterResponse();
             resp.SpaceId = this.Id;  // 当前场景的id
             character.Info.Entity = character.EntityData;
 
-             //把 NEntity 对象加入到 Entity 列表中
+             //把 NetEntity 对象加入到 Entity 列表中
             resp.CharacterList.Add(character.Info);
 
             foreach(var kv in CharacterDict) 
@@ -113,7 +113,7 @@ namespace GameServer.Model
         }
 
         // 广播更新Entity的信息
-        public void UpdateEntity(NEntitySync entitySync)
+        public void UpdateEntity(NetEntitySync entitySync)
         {
             // 广播自己的位置给其他人，不需要广播给自己，因为自己的客户端能够看到
             foreach (var kv in CharacterDict)

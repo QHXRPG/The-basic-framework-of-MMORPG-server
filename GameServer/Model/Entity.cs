@@ -15,7 +15,7 @@ namespace GameServer.Model
         private Vector3Int position;  // 位置
         private Vector3Int direction; //方向
         private int spaceId; // 所在地图ID 
-        private NEntity netObj;  // 网络对象
+        private NetEntity netObj;  // 网络对象
         private long _lastUpdate; // 最后一次更新时间戳
 
         public int SpaceId
@@ -26,7 +26,7 @@ namespace GameServer.Model
 
         public int entityId { get { return netObj.Id; } }
 
-        // 设置 Entity 时， NEntity的数值也会跟着更新
+        // 设置 Entity 时， NetEntity的数值也会跟着更新
         public Vector3Int Position { 
             get { return position; }
             set 
@@ -72,13 +72,13 @@ namespace GameServer.Model
 
         public Entity(Vector3Int pos, Vector3Int dir)
         {
-            netObj = new NEntity();
+            netObj = new NetEntity();
             Position = pos;
             Direction = dir;
         }
 
         // 把网络数值覆盖到本地去
-        public NEntity EntityData
+        public NetEntity EntityData
         {
             get { return netObj; }
             set

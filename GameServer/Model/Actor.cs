@@ -28,7 +28,7 @@ namespace GameServer.Model
         // 当前Actor所在的场景
         public Space Space { get; set; }
 
-        public NCharacter Info { get; set; } = new NCharacter();
+        public NetActor Info { get; set; } = new NetActor();
 
         public EntityType Type { get { return Info.EntityType; } set { Info.EntityType = value; } }
 
