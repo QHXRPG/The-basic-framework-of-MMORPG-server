@@ -149,7 +149,7 @@ enum CastResult{
     TargetError = 8;
 }
 
-//閲婃斁淇℃伅
+//技能释放信息
 message CastInfo{
     int32 casterId = 1;  // 技能释放者id
     int32 skillId = 2;   // 技能id

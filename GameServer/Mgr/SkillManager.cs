@@ -59,6 +59,11 @@ namespace GameServer.Mgr
             }
         }
 
+        public Skill GetSkill(int skillId)
+        {
+            return new Skill(owner, skillId);
+        }
+
 
         public void Update() 
         {

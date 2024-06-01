@@ -23,6 +23,12 @@ namespace GameServer.Battle
         public float _time;       // 技能运行时间
         public SkillState State;   // 当前技能状态
 
+        public bool IsUnitTarget { get => Define.TargetType == "单位"; }
+
+        public bool IsPointTarget { get => Define.TargetType == "点"; }
+
+        public bool IsNullTarget { get => Define.TargetType == "None"; }
+
         public Skill(Actor owner, int skid)
         {
             owner = owner;

@@ -8,6 +8,7 @@ using GameServer.Mgr;
 using Proto.Message;
 using System.Threading;
 using GameServer.Battle;
+using GameServer.Fight;
 
 namespace GameServer.Model
 {
@@ -41,6 +42,8 @@ namespace GameServer.Model
         public bool IsDeath;    // 角色是否死亡
 
         public SkillManager skillMgr;
+
+        public Spell Spell;
         public Actor(EntityType entityType, int TID, int level, Vector3Int position, Vector3Int direction)
             : base(position, direction)
         {   
@@ -55,6 +58,8 @@ namespace GameServer.Model
             this.Info.Mp = (int)Define.MPMax;
             this.skillMgr = new SkillManager(this);
             this.Attr.Init(this);
+
+            this.Spell = new Spell(this);
         }
 
         public void OnEnterSpace(Space space)
