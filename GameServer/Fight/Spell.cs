@@ -1,4 +1,6 @@
 ﻿using GameServer.Battle;
+using GameServer.Core;
+using GameServer.Mgr;
 using GameServer.Model;
 using Proto.Message;
 using Serilog;
@@ -54,13 +56,48 @@ namespace GameServer.Fight
         // 释放单位目标技能
         public void SpellTarget(int skill_id, int target_id)
         {
-            Log.Information("SpellTarget");
+            var skill = Owner.skillMgr.GetSkill(skill_id);
+
+            // 检查技能
+            if(skill == null) 
+            {
+                Log.Warning("角色 {0} 技能 {1} 不存在", Owner.Name, skill_id);
+                return;
+            }
+
+            //检查目标
+            var target = Game.GetUnit(target_id);
+            if(target == null)
+            {
+                Log.Warning("角色 {0} 不存在", Owner.Name);
+            }
+
+            // 执行技能
+            SCObject sco = new SCEntity(target);
+            var res = skill.CanUse(sco);
+            if(res != CastResult.Success)
+            {
+                // 通知施法者技能失败
+                OnSpellFailure(skill_id, res);
+                return;
+            }
+            skill.Use(sco);
+            CastInfo info = new CastInfo()
+            {
+                CasterId = Owner.entityId,
+                TargetId = target_id,
+                SkillId = skill_id,
+            };
+            Owner.Space.fightMgr.SpellQueue.Enqueue(info);
         }
 
         // 释放点目标技能
         public void SpellPosition(int skill_id, Vector3 position)
         {
             Log.Information("SpellPosition");
+
+            // 执行技能
+            SCObject sco = new SCPosition(position);
         }
 
         // 通知玩家技能失败

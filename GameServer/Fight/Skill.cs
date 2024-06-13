@@ -1,4 +1,6 @@
-﻿using GameServer.Model;
+﻿using GameServer.Fight;
+using GameServer.Model;
+using Proto.Message;
 using Serilog;
 using Summer;
 using System;
@@ -57,5 +59,18 @@ namespace GameServer.Battle
                 Log.Information("Skill Active {0}", Define.Name);
             }
         }
+        //检查技能是否可用
+        public CastResult CanUse(SCObject sco)
+        {
+            return CastResult.Success;
+        }
+
+        //使用技能
+        public CastResult Use(SCObject sco)
+        {
+            return CastResult.Success;
+        }
     }
+
+
 }

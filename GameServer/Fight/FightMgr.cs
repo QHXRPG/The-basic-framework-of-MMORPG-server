@@ -22,7 +22,13 @@ namespace GameServer.Fight
         }
 
         // 技能施法队列
-        public ConcurrentQueue<CastInfo> CastQueue = new ConcurrentQueue<CastInfo>();  
+        public ConcurrentQueue<CastInfo> CastQueue = new ConcurrentQueue<CastInfo>();
+
+        // 等待广播的队列
+        public ConcurrentQueue<CastInfo> SpellQueue = new();
+
+        // 施法响应对象，每帧发送一次s
+        private SpellResponse SpellResponse = new();
 
         public void OnUpdate(float delta)
         {
@@ -31,6 +37,19 @@ namespace GameServer.Fight
                 Log.Information("执行施法：{0}", cast);
                 RunCast(cast);
             }
+            BroadcastSpell();
+        }
+
+        // 广播施法信息
+        private void BroadcastSpell()
+        {
+            // 把技能都放入SpellResponse中的施法列表中
+            while (SpellQueue.TryDequeue(out var item))
+            {
+                SpellResponse.CastList.Add(item);   
+            }
+            space.Broadcast(SpellResponse);
+            SpellResponse.CastList.Clear();
         }
 
         private void RunCast(CastInfo cast)

@@ -11,6 +11,7 @@ using Proto.Message;
 using GameServer.Mgr;
 using GameServer.Core;
 using GameServer.Fight;
+using Google.Protobuf;
 
 namespace GameServer.Model
 {
@@ -140,9 +141,16 @@ namespace GameServer.Model
             var resp = new SpaceCharaterEnterResponse();
             resp.SpaceId = this.Id;
             resp.CharacterList.Add(monster.Info);
-            foreach (var kv in CharacterDict) 
+            Broadcast(resp);
+        }
+
+
+        // 广播一个proto给场景的全体玩家
+        public void Broadcast(IMessage msg)
+        {
+            foreach (var kv in CharacterDict)
             {
-                kv.Value.conn.Send(resp);
+                kv.Value.conn.Send(msg);
             }
         }
 
